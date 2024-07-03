@@ -12,7 +12,7 @@ module Github
     end
 
     def snapshot_board
-      puts JSON.pretty_generate issues_by_status
+      puts JSON.pretty_generate issue_ids_by_status
     end
 
     def add_issue(issue_id: nil, issue_number: nil)
@@ -115,6 +115,16 @@ module Github
       end.compact.to_h
 
       unfiltered_issues_grouped.keys.group_by { |status| unfiltered_issues_grouped.to_h[status] }
+    end
+
+    def issue_ids_by_status
+      issue_ids_by_status = {}
+
+      issues_by_status.each do |status, issues|
+        issue_ids_by_status[status] = issues.map { |issue| issue[:number] }
+      end
+
+      issue_ids_by_status
     end
 
     def issue_ids_for_column(column_name)
