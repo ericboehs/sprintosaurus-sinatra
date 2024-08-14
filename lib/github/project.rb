@@ -3,27 +3,24 @@ require 'octokit'
 module Github
   # Class to interact with GitHub Projects
   class Project
-    attr_accessor :token, :organization, :repo, :number
+    attr_accessor :token, :organization, :number
 
-    def initialize(token:, organization:, repo:, number:)
+    def initialize(token:, organization:, number:)
       @token = token
       @organization = organization
-      @repo = repo
       @number = number
     end
 
-    def snapshot_board
-      puts JSON.pretty_generate sprints_with_issues
-    end
-
-    def sprints_with_issues
-      sprints.map { |sprint| [sprint[:title], issues_by_sprint(sprint[:title])] }.to_h
-    end
+    # def sprints_with_issues
+    #   sprints.map { |sprint| [sprint[:title], issues_by_sprint(sprint[:title])] }.to_h
+    # end
 
     def sprints
-      issues.map do |issue|
-        issue[:fieldValues][:nodes].select { |node| node[:field] && node[:field][:name] == 'Sprint' }
-      end.flatten.uniq
+      issues
+        .map { |issue| issue[:fieldValues][:nodes].select { |node| node[:field] && node[:field][:name] == 'Sprint' } }
+        .flatten
+        .uniq { |node| [node[:field][:name], node[:startDate]] }
+        .sort_by { |sprint| sprint[:startDate] }
     end
 
     def issues_by_sprint(sprint_title)
@@ -128,6 +125,8 @@ module Github
                       title
                       number
                       state
+                      url
+                      closedAt
                       assignees(first: 10) {
                         nodes {
                           login
@@ -138,6 +137,8 @@ module Github
                       title
                       number
                       state
+                      url
+                      closedAt
                       assignees(first: 10) {
                         nodes {
                           login

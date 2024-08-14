@@ -1,5 +1,17 @@
 source 'https://rubygems.org'
 
-gem 'async'
+gem 'activerecord'
 gem 'octokit'
-gem 'pry'
+gem 'pg'
+gem 'puma'
+gem 'rackup'
+gem 'sinatra'
+
+group :development, :test do
+  gem 'pry'
+  gem 'rerun'
+end
+
+group :test do
+  gem 'minitest'
+end

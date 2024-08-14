@@ -1,0 +1,28 @@
+<% if @sprints.any? %>
+  <ul role="list" class="divide-y divide-gray-100">
+    <% @sprints.each do |sprint| %>
+      <li class="flex items-center justify-between gap-x-6 py-5">
+        <div class="min-w-0">
+          <div class="flex items-start gap-x-3">
+            <p class="text-sm font-semibold leading-6 text-gray-900"><a href="/<%= sprint.id %>"><%= sprint.title %></a></p>
+            <% if sprint.planned? %>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-600/20">Planned</p>
+            <% elsif sprint.in_progress? %>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-blue-50 px-1.5 py-0.5 text-xs font-medium text-blue-600 ring-1 ring-inset ring-blue-500/10">In progress</p>
+            <% elsif sprint.completed? %>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Complete</p>
+            <% end %>
+          </div>
+          <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+            <p class="whitespace-nowrap">
+              <%= sprint.planned? ? "Starts" : "Started" %> on <time datetime="2023-03-17T00:00Z"><%= sprint.start_date.strftime("%B %d, %Y") %></time></p>
+          </div>
+        </div>
+        <div class="flex flex-none items-center gap-x-4">
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  No sprints found
+<% end %>

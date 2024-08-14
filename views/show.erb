@@ -1,0 +1,120 @@
+<% sprint = @sprint %>
+
+<div class="w-full max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
+  <div class="relative">
+    <canvas id="sprintChart"></canvas>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('sprintChart').getContext('2d');
+    var sprintChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| date.strftime("%a %d") }.to_json %>,
+        datasets: [
+          {
+            label: 'Remaining',
+            data: <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| sprint.issues.where("closed_at IS NULL OR closed_at > ?", date.end_of_day).sum(:points) }.to_json %>,
+            borderColor: 'blue',
+            fill: true,
+            backgroundColor: 'rgba(0, 0, 255, 0.1)'
+          },
+          {
+            label: 'Ideal',
+            data: (function() {
+              var totalPoints = <%= sprint.points %>;
+              var days = <%= (sprint.end_date.to_date - sprint.start_date.to_date).to_i %>;
+              var idealData = [];
+              var pointsPerDay = totalPoints / (days - (Math.floor(days / 7) * 2)); // Exclude weekends from the divisor
+              var currentPoints = totalPoints;
+              
+              for (var i = 0; i <= days; i++) {
+                var date = new Date(<%= sprint.start_date.to_date.strftime('%Y-%m-%d') %>);
+                date.setDate(date.getDate() + i);
+                var dayOfWeek = date.getDay();
+                
+                // Check if it's a weekend (Saturday or Sunday)
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                  currentPoints -= pointsPerDay;
+                }
+                
+                idealData.push(currentPoints > 0 ? currentPoints : 0); // Ensure it doesn't go below 0
+              }
+              
+              return idealData;
+            })(),
+            borderColor: 'gray',
+            borderDash: [5, 5],
+            fill: false
+          }
+        ]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Points'
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-6">
+  <div class="px-2 py-3 sm:px-3">
+    <div class="border-gray-200 bg-white px-2 py-3 sm:px-3">
+      <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+        <div class="ml-0 mt-0">
+          <h3 class="text-base leading-6">Completed issues or pull requests</h3>
+        </div>
+        <div class="ml-0 mt-0 flex-shrink-0">
+          Story Points
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="px-4 py-5 sm:p-6">
+    <% if sprint.issues.open.any? %>
+      <% sprint.issues.open.each do |issue| %>
+        <%= erb :_issue, locals: { issue: issue } %>
+      <% end %>
+    <% else %>
+      Sprint has no open issues assigned to it.
+    <% end %>
+  </div>
+</div>
+
+<div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-6">
+  <div class="px-2 py-3 sm:px-3">
+    <div class="border-gray-200 bg-white px-2 py-3 sm:px-3">
+      <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+        <div class="ml-0 mt-0">
+          <h3 class="text-base leading-6">Completed issues or pull requests</h3>
+        </div>
+        <div class="ml-0 mt-0 flex-shrink-0">
+          Story Points
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="px-4 py-5 sm:p-6">
+    <% if sprint.issues.closed.any? %>
+      <% sprint.issues.closed.each do |issue| %>
+        <%= erb :_issue, locals: { issue: issue } %>
+      <% end %>
+    <% else %>
+      Sprint has no closed issues assigned to it.
+    <% end %>
+  </div>
+</div>
