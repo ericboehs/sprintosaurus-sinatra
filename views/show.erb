@@ -4,6 +4,58 @@
   <div class="relative">
     <canvas id="sprintChart"></canvas>
   </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Story Points Progress Bar -->
+    <div class="mb-4">
+      <h3 class="font-semibold mb-2">Story Points</h3>
+      <div class="flex items-center">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= ((sprint.points_completed.to_f / sprint.points) * 100).round %>%;"></div>
+        </div>
+        <span class="ml-2 text-gray-700 font-semibold"><%= ((sprint.points_completed.to_f / sprint.points) * 100).round %>%</span>
+      </div>
+      <div class="flex justify-between text-gray-600 mt-2">
+        <div>
+          <p class="text-sm">Completed</p>
+          <p class="text-lg font-semibold"><%= sprint.points_completed %></p>
+        </div>
+        <div>
+          <p class="text-sm">Remaining</p>
+          <p class="text-lg font-semibold"><%= sprint.points_remaining %></p>
+        </div>
+        <div>
+          <p class="text-sm">Total</p>
+          <p class="text-lg font-semibold"><%= sprint.points %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issues and Pull Requests Progress Bar -->
+    <div class="mb-4">
+      <h3 class="font-semibold mb-2">Issues and Pull Requests</h3>
+      <div class="flex items-center">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
+        </div>
+        <span class="ml-2 text-gray-700 font-semibold"><%= ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%</span>
+      </div>
+      <div class="flex justify-between text-gray-600 mt-2">
+        <div>
+          <p class="text-sm">Completed</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.closed.count %></p>
+        </div>
+        <div>
+          <p class="text-sm">Remaining</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.open.count %></p>
+        </div>
+        <div>
+          <p class="text-sm">Total</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
