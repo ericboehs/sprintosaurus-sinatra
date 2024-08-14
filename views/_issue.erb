@@ -27,7 +27,9 @@
     </div>
     <div class="flex flex-none items-center gap-x-4">
       <% if issue.points.present? %>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10"><%= issue.points %></span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10"><%= issue.points || '-' %></span>
+      <% else %>
+        <span class="text-gray-400 text-sm">Not estimated</span>
       <% end %>
     </div>
   </li>
