@@ -1,35 +1,10 @@
 # frozen_string_literal: true
 
-ENV['RACK_ENV'] ||= 'development'
-
-require 'sinatra/content_for'
-require 'logger'
-
-require 'bundler/setup'
-Bundler.require 'default', ENV['RACK_ENV']
-
-require './lib/dotenv'
-require_relative './lib/github/project'
-
-require 'active_record'
-require_relative './models/issue'
-require_relative './models/issues_sprint'
-require_relative './models/project'
-require_relative './models/sprint'
-require_relative './job'
+require_relative './environment'
 
 # The App
 class App < Sinatra::Base
   helpers Sinatra::ContentFor
-
-  def self.boot
-    url = ENV['DATABASE_URL']
-    ActiveRecord::Base.establish_connection url
-  end
-
-  def self.logger
-    @@logger ||= Logger.new $stdout # rubocop:disable Style/ClassVars
-  end
 
   get '/' do
     @title = 'Projects'
@@ -72,5 +47,3 @@ class App < Sinatra::Base
     erb :sprint
   end
 end
-
-App.boot

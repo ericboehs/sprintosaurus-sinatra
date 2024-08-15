@@ -1,27 +1,10 @@
 # frozen_string_literal: true
 
-ENV['RACK_ENV'] ||= 'development'
-
-$LOAD_PATH.unshift 'lib'
-require 'logger'
-
-require 'bundler/setup'
-Bundler.require 'default', ENV['RACK_ENV']
-
-require 'dotenv'
-require 'github/project'
-
-require 'active_record'
-require_relative './models/issue'
-require_relative './models/issues_sprint'
-require_relative './models/sprint'
-require_relative './models/project'
+require_relative './environment'
 
 # Fetches GH Project Issues
 class Job
   class << self
-    attr_accessor :logger
-
     def persist_issues(project_info, issues)
       project = Project.find_or_initialize_by(number: project_info[:number]).tap do |project|
         project.title = project_info[:title]
@@ -35,7 +18,7 @@ class Job
       issues.each do |issue_data|
         sprints =
           issue_data[:fieldValues][:nodes]
-          .select { |node| node[:field] && node[:field][:name] == 'Sprint' }
+          .select { |node| node.key?(:iterationId) }
           .map do |sprint_data|
             Sprint.find_or_initialize_by(iteration_id: sprint_data[:iterationId]).tap do |sprint|
               sprint.assign_attributes(
@@ -87,25 +70,24 @@ class Job
         persist_issues project.info, project.issues
       end
 
-      puts 'Done.'
+      $logger.info 'Finished Job.' # rubocop:disable Style/GlobalVars
     end
   end
 end
 
-if __FILE__ == $0
-  # Ensure the database connection is established
-  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
-
-  Job.logger = Logger.new($stdout)
-  Job.logger.info('Starting Job.')
+# rubocop:disable Style/GlobalVars
+if __FILE__ == $PROGRAM_NAME
+  $logger = Logger.new($stdout)
+  $logger.info('Starting Job.')
 
   # Run the job
   loop do
     Job.run
-    Job.logger.info "Sleeping until #{Time.now + 10.minutes}..."
+    $logger.info "Sleeping until #{Time.now + 10.minutes}..."
     sleep 60 * 10
   end
 
-  Job.logger.error('Job exited.')
+  $logger.error('Job exited.')
   exit 1
 end
+# rubocop:enable Style/GlobalVars

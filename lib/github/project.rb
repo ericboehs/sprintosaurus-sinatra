@@ -41,7 +41,7 @@ module Github
 
     def issues
       @issues ||= begin
-        puts "Loading GitHub Project #{organization}/##{number}..."
+        $logger.info "Loading GitHub Project #{organization}/##{number}..."
         items = []
         has_next_page = true
         cursor = nil
@@ -185,8 +185,8 @@ module Github
       response = client.post '/graphql', { query: }.to_json
       p response if ENV['DEBUG']
       if response[:errors]
-        puts "Query: #{query}"
-        puts(response[:errors].map { |error| error[:message] })
+        $logger.error "Query: #{query}"
+        $logger.error(response[:errors].map { |error| error[:message] })
         raise 'GraphQL Error'
       end
       response
