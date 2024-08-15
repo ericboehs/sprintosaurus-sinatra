@@ -17,7 +17,6 @@ class Issue < ActiveRecord::Base
 
   def unplanned?(sprint)
     issue_sprint = issues_sprints.find_by(sprint:)
-    issue_sprint.created_at > issue_sprint.sprint.start_date &&
-      created_at.to_date != issue_sprint.created_at.to_date
+    issue_sprint.created_at > issue_sprint.sprint.start_date
   end
 end

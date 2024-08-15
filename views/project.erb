@@ -8,7 +8,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
             </svg>
 
-            <p class="text-sm font-semibold leading-6 text-gray-900"><a href="/sprints/<%= sprint.id %>"><%= sprint.title %></a></p>
+            <p class="text-sm font-semibold leading-6 text-gray-900"><a href="/sprints/<%= sprint.id %>" class="hover:underline"><%= sprint.title %></a></p>
             <% if sprint.planned? %>
               <p class="mt-0.5 whitespace-nowrap rounded-md bg-gray-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-600/20">Planned</p>
             <% elsif sprint.in_progress? %>
@@ -23,13 +23,13 @@
             </svg>
 
             <p class="whitespace-nowrap">
-            <time datetime="<%= sprint.start_date.strftime('%Y-%m-%dT%H:%MZ') %>">
-              <%= sprint.start_date.year == Date.today.year ? sprint.start_date.strftime("%b %d") : sprint.start_date.strftime("%b %d, %Y") %>
-            </time>
-            &ndash;
-            <time datetime="<%= sprint.end_date.strftime('%Y-%m-%dT%H:%MZ') %>">
-              <%= sprint.end_date.year == Date.today.year ? (sprint.start_date.month == sprint.end_date.month ? sprint.end_date.strftime("%d") : sprint.end_date.strftime("%b %d")) : sprint.end_date.strftime("%b %d, %Y") %>
-            </time>
+              <time datetime="<%= sprint.start_date.strftime('%Y-%m-%dT%H:%MZ') %>">
+                <%= sprint.start_date.year == Date.today.year ? sprint.start_date.strftime("%b %d") : sprint.start_date.strftime("%b %d, %Y") %>
+              </time>
+              &ndash;
+              <time datetime="<%= sprint.end_date.strftime('%Y-%m-%dT%H:%MZ') %>">
+                <%= sprint.end_date.year == Date.today.year ? (sprint.start_date.month == sprint.end_date.month ? sprint.end_date.strftime("%d") : sprint.end_date.strftime("%b %d")) : sprint.end_date.strftime("%b %d, %Y") %>
+              </time>
             </p>
           </div>
         </div>

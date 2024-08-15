@@ -2,7 +2,7 @@
 class Sprint < ActiveRecord::Base
   belongs_to :project
   has_many :issues_sprints
-  has_many :issues, through: :issues_sprints do
+  has_many :issues, -> { order issues_sprints: { created_at: :asc } }, through: :issues_sprints do
     def open
       where state: 'OPEN'
     end
