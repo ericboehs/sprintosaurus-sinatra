@@ -36,7 +36,7 @@ class Job
         sprints.each do |sprint|
           next if issue.sprints.include?(sprint)
 
-          issue.sprints << sprint
+          IssuesSprint.create(issue:, sprint:, created_at: issue_data[:content][:createdAt])
         end
 
         fields = issue_data[:fieldValues][:nodes].map do |node|
@@ -52,6 +52,7 @@ class Job
         issue.url = issue_data[:content][:url]
         issue.data = issue_data
         issue.closed_at = issue_data[:content][:closedAt]
+        issue.created_at = issue_data[:content][:createdAt]
         issue.save
       end
     end

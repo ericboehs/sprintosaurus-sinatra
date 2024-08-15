@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'actionview'
 gem 'activerecord'
 gem 'octokit'
 gem 'pg'

@@ -24,7 +24,7 @@
         <%= issue.repo %> #<%= issue.number %>
         <p class="whitespace-nowrap">
           Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
-            <%= issue.issues_sprints.find_by(sprint:).created_at.strftime("%b %d") %>
+            <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago
           </time>
         </p>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">

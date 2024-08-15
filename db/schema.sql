@@ -115,7 +115,7 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.sprints (
     id integer NOT NULL,
-    iteration_id integer,
+    iteration_id text,
     title text,
     start_date date,
     duration integer,
@@ -235,4 +235,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20240714000001'),
     ('20240714000002'),
     ('20240714000003'),
-    ('20240714000004');
+    ('20240714000004'),
+    ('20240815180317');

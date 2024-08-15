@@ -4,6 +4,7 @@ require_relative './environment'
 
 # The App
 class App < Sinatra::Base
+  include ActionView::Helpers::DateHelper
   helpers Sinatra::ContentFor
 
   get '/' do

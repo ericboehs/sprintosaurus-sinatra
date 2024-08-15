@@ -127,6 +127,7 @@ module Github
                       state
                       url
                       closedAt
+                      createdAt
                       assignees(first: 10) {
                         nodes {
                           login
@@ -139,6 +140,7 @@ module Github
                       state
                       url
                       closedAt
+                      createdAt
                       assignees(first: 10) {
                         nodes {
                           login
