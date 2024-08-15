@@ -36,7 +36,12 @@ class Job
         sprints.each do |sprint|
           next if issue.sprints.include?(sprint)
 
-          IssuesSprint.create(issue:, sprint:, created_at: issue_data[:content][:createdAt])
+          # Use issue's created_at if we're importing for the first time as when it was added is not available
+          if sprint.project.created_at > 1.hour.ago
+            IssuesSprint.create(issue:, sprint:, created_at: issue_data[:content][:createdAt])
+          else
+            issue.sprints << sprint
+          end
         end
 
         fields = issue_data[:fieldValues][:nodes].map do |node|
