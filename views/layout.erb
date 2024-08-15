@@ -41,8 +41,7 @@
         </div>
       </div>
 
-      <!-- Mobile menu, show/hide based on menu state. -->
-      <div class="sm:hidden" id="mobile-menu">
+      <div class="sm:hidden hidden" id="mobile-menu">
         <div class="space-y-1 pb-3 pt-2">
           <a href="/" class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700" aria-current="page">Sprint Reports</a>
         </div>
@@ -99,5 +98,14 @@
       </main>
     </div>
   </div>
+  <script>
+    function toggleMenu() {
+        var menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    var button = document.querySelector('button[type="button"]');
+    button.addEventListener('click', toggleMenu);
+  </script>
 </body>
 </html>
