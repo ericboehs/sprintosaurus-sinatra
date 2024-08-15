@@ -36,6 +36,19 @@ class App < Sinatra::Base
     erb :projects
   end
 
+  get '/projects/new' do
+    @project = Project.new
+    erb :new_project
+  end
+
+  post '/projects' do
+    project = Project.new(url: params[:url])
+    project.number = project.url.match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
+    project.title = "Pending Sync for #{project.number}"
+    project.save!
+    redirect "/projects/#{project.id}"
+  end
+
   get '/projects/:id' do
     @project = Project.find(params[:id])
     @title = @project.title

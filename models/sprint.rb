@@ -39,4 +39,11 @@ class Sprint < ActiveRecord::Base
   def points_completed
     issues.closed.sum(:points)
   end
+
+  def off_track_by
+    elapsed_days = (Date.today - start_date).to_i
+    expected_completion = (elapsed_days.to_f / duration * 100).round
+    actual_completion = ((points_completed.to_f / points) * 100).round
+    (actual_completion - expected_completion).abs
+  end
 end
