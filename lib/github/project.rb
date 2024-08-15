@@ -41,7 +41,7 @@ module Github
 
     def issues
       @issues ||= begin
-        puts 'Loading GitHub Project...'
+        puts "Loading GitHub Project #{organization}/##{number}..."
         items = []
         has_next_page = true
         cursor = nil
