@@ -4,11 +4,20 @@
       <li class="flex items-center justify-between gap-x-6 py-5">
         <div class="min-w-0">
           <div class="flex items-start gap-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+            </svg>
             <p class="text-sm font-semibold leading-6 text-gray-900"><a href="/projects/<%= project.id %>"><%= project.title %></a></p>
+            <% unless project.public %>
+              <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                Private
+              </span>
+            <% end %>
+             
           </div>
           <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
             <p class="whitespace-nowrap">
-              Added <time datetime="2023-03-17T00:00Z"><%= project.created_at.strftime("%B %d, %Y") %></time></p>
+              #<%= project.number %> added <time datetime="2023-03-17T00:00Z"><%= project.created_at.strftime("%B %d, %Y") %></time></p>
           </div>
         </div>
         <div class="flex flex-none items-center gap-x-4">

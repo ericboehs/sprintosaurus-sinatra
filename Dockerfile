@@ -18,4 +18,4 @@ RUN bundle install
 
 COPY . .
 
-CMD ["ruby", "job.rb"]
+CMD ["rackup", "config.ru", "-o", "0.0.0.0"]

@@ -72,6 +72,7 @@ CREATE TABLE public.projects (
     id integer NOT NULL,
     number integer NOT NULL,
     title text,
+    public text,
     closed text,
     url text,
     created_at timestamp without time zone NOT NULL,

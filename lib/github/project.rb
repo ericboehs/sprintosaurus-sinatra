@@ -171,6 +171,7 @@ module Github
             projectV2(number: #{number}) {
               id
               number
+              public
               url
               title
               closed

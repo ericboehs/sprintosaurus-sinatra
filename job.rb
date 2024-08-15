@@ -26,6 +26,7 @@ class Job
       project = Project.find_or_initialize_by(number: project_info[:number]).tap do |project|
         project.title = project_info[:title]
         project.number = project_info[:number]
+        project.public = project_info[:public]
         project.closed = project_info[:closed]
         project.url = project_info[:url]
         project.save
@@ -73,6 +74,13 @@ class Job
     end
 
     def run
+      if Project.all.empty?
+        ENV['SEED_GH_PROJECT_URLS'].split(',').each do |url|
+          number = url.match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
+          Project.create(number:, url:)
+        end
+      end
+
       Project.all.each do |project|
         organization, number = project.url.match(%r{github.com/orgs/([^/]+)/projects/(\d+)}).captures
         project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
@@ -85,9 +93,7 @@ class Job
 end
 
 # Ensure the database connection is established
-ActiveRecord::Base.establish_connection(
-  ENV['DATABASE_URL'] || 'postgres://postgres:password@postgres:5432/oge-smarthours-pricing'
-)
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
 Job.logger = Logger.new($stdout)
 Job.logger.info('Starting Job.')
