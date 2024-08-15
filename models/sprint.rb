@@ -1,5 +1,6 @@
 # Sprint Model
 class Sprint < ActiveRecord::Base
+  belongs_to :project
   has_many :issues_sprints
   has_many :issues, through: :issues_sprints do
     def open

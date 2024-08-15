@@ -15,13 +15,22 @@ require 'active_record'
 require_relative './models/issue'
 require_relative './models/issues_sprint'
 require_relative './models/sprint'
+require_relative './models/project'
 
 # Fetches GH Project Issues
 class Job
   class << self
     attr_accessor :logger
 
-    def persist_issues(issues)
+    def persist_issues(project_info, issues)
+      project = Project.find_or_initialize_by(number: project_info[:number]).tap do |project|
+        project.title = project_info[:title]
+        project.number = project_info[:number]
+        project.closed = project_info[:closed]
+        project.url = project_info[:url]
+        project.save
+      end
+
       issues.each do |issue_data|
         sprints =
           issue_data[:fieldValues][:nodes]
@@ -31,7 +40,8 @@ class Job
               sprint.assign_attributes(
                 title: sprint_data[:title],
                 start_date: sprint_data[:startDate],
-                duration: sprint_data[:duration]
+                duration: sprint_data[:duration],
+                project_id: project.id
               )
               sprint.save
             end
@@ -63,10 +73,10 @@ class Job
     end
 
     def run
-      ENV.fetch('GH_PROJECT_URLS').split(',').each do |url|
-        organization, number = url.match(%r{github.com/orgs/([^/]+)/projects/(\d+)}).captures
+      Project.all.each do |project|
+        organization, number = project.url.match(%r{github.com/orgs/([^/]+)/projects/(\d+)}).captures
         project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
-        persist_issues project.issues
+        persist_issues project.info, project.issues
       end
 
       puts 'Done.'

@@ -65,6 +65,41 @@ CREATE TABLE public.issues_sprints (
 
 
 --
+-- Name: projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.projects (
+    id integer NOT NULL,
+    number integer NOT NULL,
+    title text,
+    closed text,
+    url text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.projects_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -81,8 +116,9 @@ CREATE TABLE public.sprints (
     id integer NOT NULL,
     iteration_id integer,
     title text,
-    start_date timestamp without time zone,
+    start_date date,
     duration integer,
+    project_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -116,6 +152,13 @@ ALTER TABLE ONLY public.issues ALTER COLUMN id SET DEFAULT nextval('public.issue
 
 
 --
+-- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
+
+
+--
 -- Name: sprints id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -128,6 +171,14 @@ ALTER TABLE ONLY public.sprints ALTER COLUMN id SET DEFAULT nextval('public.spri
 
 ALTER TABLE ONLY public.issues
     ADD CONSTRAINT issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -144,6 +195,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.sprints
     ADD CONSTRAINT sprints_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sprints fk_project; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sprints
+    ADD CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -174,4 +233,5 @@ ALTER TABLE ONLY public.issues_sprints
 INSERT INTO public.schema_migrations (version) VALUES
     ('20240714000001'),
     ('20240714000002'),
-    ('20240714000003');
+    ('20240714000003'),
+    ('20240714000004');

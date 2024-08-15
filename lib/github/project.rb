@@ -164,6 +164,22 @@ module Github
       )[:data][:organization][:projectV2][:id]
     end
 
+    def info
+      @project_info ||= query(
+        %{query{
+          organization(login: "#{organization}") {
+            projectV2(number: #{number}) {
+              id
+              number
+              url
+              title
+              closed
+            }
+          }
+        }}
+      )[:data][:organization][:projectV2]
+    end
+
     def query(query)
       response = client.post '/graphql', { query: }.to_json
       p response if ENV['DEBUG']
