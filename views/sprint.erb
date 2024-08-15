@@ -1,0 +1,195 @@
+<% sprint = @sprint %>
+<% content_for(:subtitle) do %>
+  <div class="flex space-x-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+    </svg>
+
+    <span class="ml-2">
+      <%= sprint.start_date.strftime("%B %d, %Y") %> - <%= @sprint.end_date.strftime("%B %d, %Y") %> 
+      <% if sprint.in_progress? %>
+        (<%= (sprint.end_date - Date.today).to_i %> days left)
+      <% end %>
+    </span>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+        <path fill-rule="evenodd" d="M1 2.75A.75.75 0 0 1 1.75 2h16.5a.75.75 0 0 1 0 1.5H18v8.75A2.75 2.75 0 0 1 15.25 15h-1.072l.798 3.06a.75.75 0 0 1-1.452.38L13.41 18H6.59l-.114.44a.75.75 0 0 1-1.452-.38L5.823 15H4.75A2.75 2.75 0 0 1 2 12.25V3.5h-.25A.75.75 0 0 1 1 2.75ZM7.373 15l-.391 1.5h6.037l-.392-1.5H7.373Zm7.49-8.931a.75.75 0 0 1-.175 1.046 19.326 19.326 0 0 0-3.398 3.098.75.75 0 0 1-1.097.04L8.5 8.561l-2.22 2.22A.75.75 0 1 1 5.22 9.72l2.75-2.75a.75.75 0 0 1 1.06 0l1.664 1.663a20.786 20.786 0 0 1 3.122-2.74.75.75 0 0 1 1.046.176Z" clip-rule="evenodd" />
+    </svg>
+    <% if sprint.off_track_by  >= 0 %>
+      <span class="ml-2x text-orange-300">Off-track by <%= sprint.off_track_by %>%</span>
+    <% else %>
+      <span class="ml-2">On-track</span>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="w-full max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
+  <div class="relative">
+    <canvas id="sprintChart"></canvas>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Story Points Progress Bar -->
+    <div class="mb-4">
+      <h3 class="font-semibold mb-2">Story Points</h3>
+      <div class="flex items-center">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= ((sprint.points_completed.to_f / sprint.points) * 100).round %>%;"></div>
+        </div>
+        <span class="ml-2 text-gray-700 font-semibold"><%= ((sprint.points_completed.to_f / sprint.points) * 100).round %>%</span>
+      </div>
+      <div class="flex justify-between text-gray-600 mt-2">
+        <div>
+          <p class="text-sm">Completed</p>
+          <p class="text-lg font-semibold"><%= sprint.points_completed %></p>
+        </div>
+        <div>
+          <p class="text-sm">Remaining</p>
+          <p class="text-lg font-semibold"><%= sprint.points_remaining %></p>
+        </div>
+        <div>
+          <p class="text-sm">Total</p>
+          <p class="text-lg font-semibold"><%= sprint.points %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issues and Pull Requests Progress Bar -->
+    <div class="mb-4">
+      <h3 class="font-semibold mb-2">Issues and Pull Requests</h3>
+      <div class="flex items-center">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
+        </div>
+        <span class="ml-2 text-gray-700 font-semibold"><%= ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%</span>
+      </div>
+      <div class="flex justify-between text-gray-600 mt-2">
+        <div>
+          <p class="text-sm">Completed</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.closed.count %></p>
+        </div>
+        <div>
+          <p class="text-sm">Remaining</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.open.count %></p>
+        </div>
+        <div>
+          <p class="text-sm">Total</p>
+          <p class="text-lg font-semibold"><%= sprint.issues.count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('sprintChart').getContext('2d');
+    var sprintChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| date.strftime("%a %d") }.to_json %>,
+        datasets: [
+          {
+            label: 'Remaining',
+            data: <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| sprint.issues.where("closed_at IS NULL OR closed_at > ?", date.end_of_day).sum(:points) }.to_json %>,
+            borderColor: 'blue',
+            fill: true,
+            backgroundColor: 'rgba(0, 0, 255, 0.1)'
+          },
+          {
+            label: 'Ideal',
+            data: (function() {
+              var totalPoints = <%= sprint.points %>;
+              var days = <%= (sprint.end_date.to_date - sprint.start_date.to_date).to_i %>;
+              var idealData = [];
+              var pointsPerDay = totalPoints / (days - (Math.floor(days / 7) * 2)); // Exclude weekends from the divisor
+              var currentPoints = totalPoints;
+              
+              for (var i = 0; i <= days; i++) {
+                var date = new Date(<%= sprint.start_date.to_date.strftime('%Y-%m-%d') %>);
+                date.setDate(date.getDate() + i);
+                var dayOfWeek = date.getDay();
+                
+                // Check if it's a weekend (Saturday or Sunday)
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                  currentPoints -= pointsPerDay;
+                }
+                
+                idealData.push(currentPoints > 0 ? currentPoints : 0); // Ensure it doesn't go below 0
+              }
+              
+              return idealData;
+            })(),
+            borderColor: 'gray',
+            borderDash: [5, 5],
+            fill: false
+          }
+        ]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Points'
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-6">
+  <div class="px-2 py-3 sm:px-3">
+    <div class="border-gray-200 bg-white px-2 py-3 sm:px-3">
+      <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+        <div class="ml-0 mt-0">
+          <h3 class="font-bold text-base leading-6">Remaining issues or pull requests</h3>
+        </div>
+        <div class="font-bold ml-0 mt-0 flex-shrink-0">
+          Story Points
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="px-4 py-5 sm:p-6">
+    <% if sprint.issues.open.any? %>
+      <% sprint.issues.open.each do |issue| %>
+        <%= erb :_issue, locals: { issue: issue } %>
+      <% end %>
+    <% else %>
+      Sprint has no open issues assigned to it.
+    <% end %>
+  </div>
+</div>
+
+<div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-6">
+  <div class="px-2 py-3 sm:px-3">
+    <div class="border-gray-200 bg-white px-2 py-3 sm:px-3">
+      <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+        <div class="ml-0 mt-0">
+          <h3 class="text-base font-bold leading-6">Completed issues or pull requests</h3>
+        </div>
+        <div class="font-bold ml-0 mt-0 flex-shrink-0">
+          Story Points
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="px-4 py-5 sm:p-6">
+    <% if sprint.issues.closed.any? %>
+      <% sprint.issues.closed.each do |issue| %>
+        <%= erb :_issue, locals: { issue: issue } %>
+      <% end %>
+    <% else %>
+      Sprint has no closed issues assigned to it.
+    <% end %>
+  </div>
+</div>

@@ -1,149 +1,42 @@
 require 'octokit'
 
 module Github
+  # Class to interact with GitHub Projects
   class Project
-    attr_accessor :token, :organization, :repo, :number
+    attr_accessor :token, :organization, :number
 
-    def initialize(token:, organization:, repo:, number:)
+    def initialize(token:, organization:, number:)
       @token = token
       @organization = organization
-      @repo = repo
       @number = number
     end
 
-    def snapshot_board
-      puts JSON.pretty_generate issue_ids_by_status
+    # def sprints_with_issues
+    #   sprints.map { |sprint| [sprint[:title], issues_by_sprint(sprint[:title])] }.to_h
+    # end
+
+    def sprints
+      issues
+        .map { |issue| issue[:fieldValues][:nodes].select { |node| node[:field] && node[:field][:name] == 'Sprint' } }
+        .flatten
+        .uniq { |node| [node[:field][:name], node[:startDate]] }
+        .sort_by { |sprint| sprint[:startDate] }
     end
 
-    def add_issue(issue_id: nil, issue_number: nil)
-      raise 'Missing args' if issue_id.nil? && issue_number.nil?
+    def issues_by_sprint(sprint_title)
+      sprint_issues = []
 
-      issue_id ||= issue_node_id issue_number
+      issues.each do |issue|
+        issue[:fieldValues][:nodes].each do |node|
+          if node[:field] && node[:field][:name] == "Sprint"
+            next unless node[:title] == sprint_title
 
-      query <<-GRAPHQL
-      mutation {
-        addProjectV2ItemById(input: {projectId: "#{node_id}" contentId: "#{issue_id}"}) {item {id}}
-      }
-      GRAPHQL
-    end
-
-    def set_issue_field(issue_id:, field_node_id:, option_node_id: nil, value: nil)
-      value = %(text: #{value}) if value.is_a? String
-      value = %(number: #{value}) if value.is_a? Numeric
-      value = %(singleSelectOptionId: "#{option_node_id}") if option_node_id
-      query <<-GRAPHQL
-      mutation {
-        updateProjectV2ItemFieldValue(
-          input: {
-            projectId: "#{node_id}"
-            itemId: "#{issue_id}"
-            fieldId: "#{field_node_id}"
-            value: {
-              #{value}
-            }
-          }
-        ) {
-          projectV2Item {
-            id
-          }
-        }
-      }
-      GRAPHQL
-    end
-
-    def remove_all_issues(exclude_closed: false)
-      $stdout.puts "Removing all issues from GH Project #{number}."
-
-      remove_issues ids: issue_ids(exclude_closed:)
-    end
-
-    def remove_issues(ids:)
-      Async do
-        semaphore = Async::Semaphore.new 10
-
-        ids.map do |id|
-          semaphore.async { remove_issue issue_id: id }
-        end.map(&:wait)
-      end
-    end
-
-    def remove_issue(issue_id:)
-      query <<-GRAPHQL
-      mutation {
-        deleteProjectV2Item(
-          input: {
-            projectId: "#{node_id}"
-            itemId: "#{issue_id}"
-          }
-        ) {
-          deletedItemId
-        }
-      }
-      GRAPHQL
-    end
-
-    def node_for_field(field_name)
-      query(
-        %{
-          query{
-            node(id: "#{node_id}") {
-            ... on ProjectV2 { fields(first: 20) { nodes { ... on ProjectV2Field { id name } ... on ProjectV2IterationField { id name configuration { iterations { startDate id }}} ... on ProjectV2SingleSelectField { id name options { id name }}}}}
-            }
-          }
-        }
-      )[:data][:node][:fields][:nodes].find { |field| field[:name] == field_name }
-    end
-
-    def issue_node_id(issue_number)
-      query(
-        %{query{repository(owner: "#{organization}", name: "#{repo}") {issue(number: #{issue_number}){id}}}}
-      )[:data][:repository][:issue][:id]
-    end
-
-    def issues_by_status
-      unfiltered_issues_grouped = issues.map do |issue|
-        next unless issue[:fieldValues][:nodes].any? do |field|
-                      field[:name] && field[:field][:name] == 'Status' && field[:name] != 'New'
-                    end
-
-        [
-          issue[:content].to_h,
-          issue[:fieldValues][:nodes].find do |field|
-            field[:name] && field[:field][:name] == 'Status' && field[:name] != 'New'
-          end&.[](:name)
-        ]
-      end.compact.to_h
-
-      unfiltered_issues_grouped.keys.group_by { |status| unfiltered_issues_grouped.to_h[status] }
-    end
-
-    def issue_ids_by_status
-      issue_ids_by_status = {}
-
-      issues_by_status.each do |status, issues|
-        issue_ids_by_status[status] = issues.map { |issue| issue[:number] }
+            sprint_issues << issue.to_h
+          end
+        end
       end
 
-      issue_ids_by_status
-    end
-
-    def issue_ids_for_column(column_name)
-      issues.map do |node|
-        issue_column_name = node[:fieldValues][:nodes].find do |field|
-                              field[:field][:name] == 'Status'
-        rescue StandardError
-          nil
-                            end&.[](:name)
-        node[:id] if issue_column_name == column_name
-      end.compact
-    end
-
-    def issue_ids(exclude_closed: false)
-      if exclude_closed
-        issues.map { |node| node[:id] if node[:content][:state] == 'OPEN' }.compact
-      else
-        issues.map { |node| node[:id] }
-      end
+      sprint_issues
     end
 
     def issues
@@ -210,6 +103,17 @@ module Github
                           }
                         }
                       }
+                      ... on ProjectV2ItemFieldIterationValue {
+                        title
+                        iterationId
+                        startDate
+                        duration
+                        field {
+                          ... on ProjectV2FieldCommon {
+                            name
+                          }
+                        }
+                      }
                     }
                   }
                   content {
@@ -221,6 +125,8 @@ module Github
                       title
                       number
                       state
+                      url
+                      closedAt
                       assignees(first: 10) {
                         nodes {
                           login
@@ -231,6 +137,8 @@ module Github
                       title
                       number
                       state
+                      url
+                      closedAt
                       assignees(first: 10) {
                         nodes {
                           login
@@ -254,6 +162,23 @@ module Github
       @node_id ||= query(
         %{query{organization(login: "#{organization}") {projectV2(number: #{number}){id}}}}
       )[:data][:organization][:projectV2][:id]
+    end
+
+    def info
+      @project_info ||= query(
+        %{query{
+          organization(login: "#{organization}") {
+            projectV2(number: #{number}) {
+              id
+              number
+              public
+              url
+              title
+              closed
+            }
+          }
+        }}
+      )[:data][:organization][:projectV2]
     end
 
     def query(query)
