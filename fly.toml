@@ -8,6 +8,7 @@ app = "gh-project-reports"
   auto_rollback = true
 
 [[services]]
+  processes = ["web", "job"]
   internal_port = 9292
   protocol = "tcp"
 

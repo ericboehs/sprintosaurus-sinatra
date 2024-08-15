@@ -18,6 +18,4 @@ RUN bundle install
 
 COPY . .
 
-RUN gem install foreman
-
-CMD ["foreman", "start"]
+CMD ["ruby", "job.rb"]

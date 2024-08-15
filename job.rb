@@ -99,12 +99,11 @@ Job.logger = Logger.new($stdout)
 Job.logger.info('Starting Job.')
 
 # Run the job
-# loop do
+loop do
   Job.run
-exit
-  # Job.logger.info "Sleeping until #{Time.now + 1.hour}..."
-  # sleep 60 * 60 * 1 # 1 hour
-# end
+  Job.logger.info "Sleeping until #{Time.now + 10.minutes}..."
+  sleep 60 * 10
+end
 
-# Job.logger.error('Job exited.')
-# exit 1
+Job.logger.error('Job exited.')
+exit 1
