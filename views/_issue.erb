@@ -8,12 +8,15 @@
         <% elsif issue.closed? %>
           <p class="mt-0.5 whitespace-nowrap rounded-md bg-purple-50 px-1.5 py-0.5 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">Closed</p>
         <% end %>
+        <% if issue.unplanned?(sprint) %>
+          <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">Unplanned</p>
+        <% end %>
       </div>
       <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
         <%= issue.repo %> #<%= issue.number %>
         <p class="whitespace-nowrap">
-          Added <time datetime="<%= issue.issues_sprints.first.created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
-            <%= issue.issues_sprints.first.created_at.strftime("%B %d, %Y") %>
+          Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
+            <%= issue.issues_sprints.find_by(sprint:).created_at.strftime("%b %d") %>
           </time>
         </p>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">

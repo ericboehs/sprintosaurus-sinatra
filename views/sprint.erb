@@ -192,7 +192,7 @@
   <div class="px-4 py-5 sm:p-6">
     <% if sprint.issues.open.any? %>
       <% sprint.issues.open.each do |issue| %>
-        <%= erb :_issue, locals: { issue: issue } %>
+        <%= erb :_issue, locals: { issue:, sprint: } %>
       <% end %>
     <% else %>
       Sprint has no open issues assigned to it.
@@ -216,7 +216,7 @@
   <div class="px-4 py-5 sm:p-6">
     <% if sprint.issues.closed.any? %>
       <% sprint.issues.closed.each do |issue| %>
-        <%= erb :_issue, locals: { issue: issue } %>
+        <%= erb :_issue, locals: { issue:, sprint: } %>
       <% end %>
     <% else %>
       Sprint has no closed issues assigned to it.
