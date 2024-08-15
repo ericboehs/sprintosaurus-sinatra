@@ -13,7 +13,7 @@ class Sprint < ActiveRecord::Base
   end
 
   def end_date
-    start_date + duration.days
+    start_date + duration.days - 1
   end
 
   def completed?
