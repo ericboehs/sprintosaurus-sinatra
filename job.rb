@@ -77,7 +77,6 @@ end
 
 # rubocop:disable Style/GlobalVars
 if __FILE__ == $PROGRAM_NAME
-  $logger = Logger.new($stdout)
   $logger.info('Starting Job.')
 
   # Run the job
