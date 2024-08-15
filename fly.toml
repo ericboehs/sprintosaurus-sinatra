@@ -7,8 +7,12 @@ app = "gh-project-reports"
   allowed_public_ports = [9292]
   auto_rollback = true
 
+[processes]
+  web = "bundle exec rackup config.ru -o 0.0.0.0"
+  job = "ruby job.rb"
+
 [[services]]
-  processes = ["web", "job"]
+  processes = ["web"]
   internal_port = 9292
   protocol = "tcp"
 
