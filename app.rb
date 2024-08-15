@@ -16,6 +16,7 @@ require_relative './models/issue'
 require_relative './models/issues_sprint'
 require_relative './models/project'
 require_relative './models/sprint'
+require_relative './job'
 
 # The App
 class App < Sinatra::Base

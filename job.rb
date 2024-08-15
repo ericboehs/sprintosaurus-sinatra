@@ -73,15 +73,15 @@ class Job
       end
     end
 
-    def run
-      if Project.all.empty?
+    def run(projects = Project.all)
+      if projects.empty?
         ENV['SEED_GH_PROJECT_URLS'].split(',').each do |url|
           number = url.match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
           Project.create(number:, url:)
         end
       end
 
-      Project.all.each do |project|
+      projects.each do |project|
         organization, number = project.url.match(%r{github.com/orgs/([^/]+)/projects/(\d+)}).captures
         project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
         persist_issues project.info, project.issues
@@ -92,18 +92,20 @@ class Job
   end
 end
 
-# Ensure the database connection is established
-ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+if __FILE__ == $0
+  # Ensure the database connection is established
+  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
-Job.logger = Logger.new($stdout)
-Job.logger.info('Starting Job.')
+  Job.logger = Logger.new($stdout)
+  Job.logger.info('Starting Job.')
 
-# Run the job
-loop do
-  Job.run
-  Job.logger.info "Sleeping until #{Time.now + 10.minutes}..."
-  sleep 60 * 10
+  # Run the job
+  loop do
+    Job.run
+    Job.logger.info "Sleeping until #{Time.now + 10.minutes}..."
+    sleep 60 * 10
+  end
+
+  Job.logger.error('Job exited.')
+  exit 1
 end
-
-Job.logger.error('Job exited.')
-exit 1
