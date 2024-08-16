@@ -1,7 +1,7 @@
 # Issue Model
 class Issue < ActiveRecord::Base
-  has_many :issues_sprints, -> { order(created_at: :desc) }
-  has_many :sprints, through: :issues_sprints
+  has_many :issues_sprints, -> { order(created_at: :desc) }, dependent: :destroy
+  has_many :sprints, through: :issues_sprints, dependent: :destroy
 
   def repo
     url.match(%r{github.com/([^/]+)/([^/]+)})&.captures&.last
