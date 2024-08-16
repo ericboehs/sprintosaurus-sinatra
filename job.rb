@@ -57,7 +57,7 @@ class Job
         issue.url = issue_data[:content][:url]
         issue.data = issue_data
         issue.closed_at = issue_data[:content][:closedAt]
-        issue.created_at = issue_data[:content][:createdAt]
+        issue.created_at = issue_data[:content][:createdAt] if issue_data[:content][:createdAt].present?
         issue.save
       end
     end

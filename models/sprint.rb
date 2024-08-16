@@ -40,10 +40,21 @@ class Sprint < ActiveRecord::Base
     issues.closed.sum(:points)
   end
 
+  def ideal_points_remaining
+    working_days_count = working_days(start_date, end_date)
+    points_per_day = points.to_f / working_days_count
+    points - (points_per_day * elapsed_days).round
+  end
+
+  def elapsed_days
+    completed? ? duration : working_days(start_date, Date.today)
+  end
+
   def off_track_by
-    elapsed_days = (Date.today - start_date).to_i
-    expected_completion = (elapsed_days.to_f / duration * 100).round
-    actual_completion = ((points_completed.to_f / points) * 100).round
-    (actual_completion - expected_completion).abs
+    ((points_remaining - ideal_points_remaining).to_f / points * 100).round
+  end
+
+  def working_days(start_date, end_date)
+    (start_date..end_date).count { |date| (1..5).include?(date.wday) }
   end
 end

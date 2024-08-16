@@ -19,7 +19,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.issues (
     id integer NOT NULL,
-    number integer NOT NULL,
+    number integer,
     title text,
     points integer,
     status text,
@@ -236,4 +236,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20240714000002'),
     ('20240714000003'),
     ('20240714000004'),
-    ('20240815180317');
+    ('20240815180317'),
+    ('20240816184820');
