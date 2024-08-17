@@ -4,23 +4,23 @@
       <div class="flex items-center gap-x-2">
         <% if issue.open? %>
           <div class="pt-0">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-700" aria-label="issue-opened" role="img">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-700 dark:text-green-400" aria-label="issue-opened" role="img">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M3.515 3.515a12 12 0 1116.97 16.97 12 12 0 01-16.97-16.97zm1.59 1.59a9.75 9.75 0 1013.79 13.79 9.75 9.75 0 00-13.79-13.79zm8.486 8.486a2.25 2.25 0 11-3.182-3.183 2.25 2.25 0 013.182 3.183z" fill="currentColor" />
             </svg>
           </div>
         <% elsif issue.closed? %>
           <div class="pt-0">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-purple-700" role="img" aria-label="issue-closed">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-purple-700 dark:text-purple-400" role="img" aria-label="issue-closed">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
           </div>
         <% end %>
-        <p class="text-sm truncate font-semibold leading-6 text-gray-900 dark:text-gray-400"><a href="<%= issue.url %>" target="_blank" class="hover:underline"><%= issue.title %></a></p>
+        <p class="text-sm truncate font-semibold leading-6 text-gray-900 dark:text-gray-200"><a href="<%= issue.url %>" target="_blank" class="hover:underline"><%= issue.title %></a></p>
         <% if issue.unplanned?(sprint) %>
-          <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20 dark:bg-yellow-950 dark:text-yellow-400 dark:ring-yellow-400/20">Unplanned</p>
+          <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20 dark:bg-yellow-950 dark:text-yellow-200 dark:ring-yellow-200/20">Unplanned</p>
         <% end %>
       </div>
-      <div class="mt-1 flex flex-col sm:flex-row items-start sm:items-center gap-x-2 gap-y-1 sm:gap-y-0 text-xs leading-5 text-gray-500">
+      <div class="mt-1 flex flex-col sm:flex-row items-start sm:items-center gap-x-2 gap-y-1 sm:gap-y-0 text-xs leading-5 text-gray-500 dark:text-gray-200">
         <span><%= issue.repo %> #<%= issue.number %></span>
         <p class="whitespace-nowrap">
         Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
@@ -39,7 +39,7 @@
     </div>
     <div class="flex flex-none items-center gap-x-4">
       <% if issue.points.present? %>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-800 dark:text-indigo-400 dark:ring-indigo-700"><%= issue.points || '-' %></span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-500 dark:text-indigo-100 dark:ring-indigo-600"><%= issue.points || '-' %></span>
       <% else %>
         <span class="text-gray-400 text-sm">Not estimated</span>
       <% end %>

@@ -1,6 +1,6 @@
 <% pagination = paginate(resource, page: (params[:page] || 1).to_i) %>
 <nav class="flex items-center justify-between" aria-label="Pagination">
-  <p class="truncate text-sm text-gray-700 dark:text-gray-500">
+  <p class="truncate text-sm text-gray-700 dark:text-gray-300">
     Showing
     <span class="font-medium"><%= ((pagination[:current_page] - 1) * pagination[:per_page]) + 1 %></span>
     to
@@ -12,11 +12,11 @@
   <div class="flex flex-1 justify-end">
     <% query_params = request.GET.merge('page' => pagination[:current_page] - 1) %>
     <% if pagination[:current_page] > 1 %>
-      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-400 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Previous</a>
+      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-200 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Previous</a>
     <% end %>
     <% query_params = request.GET.merge('page' => pagination[:current_page] + 1) %>
     <% if pagination[:current_page] < pagination[:total_pages] %>
-      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative ml-3 inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-400 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Next</a>
+      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative ml-3 inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-200 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Next</a>
     <% end %>
   </div>
 </nav>

@@ -43,14 +43,14 @@
   <div class="grid grid-cols-2 gap-4">
     <!-- Story Points Progress Bar -->
     <div class="mb-4">
-      <h3 class="font-semibold mb-2 dark:text-gray-600">Story Points</h3>
+      <h3 class="font-semibold mb-2 dark:text-gray-200">Story Points</h3>
       <div class="flex items-center">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
           <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= sprint.points == 0 ? 0 : ((sprint.points_completed.to_f / sprint.points) * 100).round %>%;"></div>
         </div>
         <span class="ml-2 text-gray-700 font-semibold"><%= sprint.points == 0 ? 0 : ((sprint.points_completed.to_f / sprint.points) * 100).round %>%</span>
       </div>
-      <div class="flex justify-between text-gray-600 mt-2">
+      <div class="flex justify-between text-gray-600 mt-2 dark:text-gray-200">
         <div>
           <p class="text-sm">Complete</p>
           <p class="text-lg font-semibold"><%= sprint.points_completed %></p>
@@ -68,7 +68,7 @@
 
     <!-- Issues and Pull Requests Progress Bar -->
     <div class="mb-4">
-      <h3 class="font-semibold mb-2 dark:text-gray-600">
+      <h3 class="font-semibold mb-2 dark:text-gray-200">
         <span class="hidden sm:inline">Issues and Pull Requests</span>
         <span class="sm:hidden">Issues and PRs</span>
       </h3>
@@ -78,7 +78,7 @@
         </div>
         <span class="ml-2 text-gray-700 font-semibold"><%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%</span>
       </div>
-      <div class="flex justify-between text-gray-600 mt-2">
+      <div class="flex justify-between text-gray-600 mt-2 dark:text-gray-200">
         <div>
           <p class="text-sm">Complete</p>
           <p class="text-lg font-semibold"><%= sprint.issues.closed.count %></p>
@@ -115,6 +115,9 @@
         break;
       }
     }
+
+    var isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var labelColor = isDarkMode ? 'white' : 'black';
 
     var sprintChart = new Chart(ctx, {
       type: 'line',
@@ -174,13 +177,21 @@
           x: {
             title: {
               display: true,
-              text: 'Date'
+              text: 'Date',
+              color: labelColor
+            },
+            ticks: {
+              color: labelColor
             }
           },
           y: {
             title: {
               display: true,
-              text: 'Points'
+              text: 'Points',
+              color: labelColor
+            },
+            ticks: {
+              color: labelColor
             }
           }
         }

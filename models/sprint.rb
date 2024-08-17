@@ -43,7 +43,7 @@ class Sprint < ActiveRecord::Base
   def ideal_points_remaining
     working_days_count = working_days(start_date, end_date)
     points_per_day = points.to_f / working_days_count
-    points - (points_per_day * working_days_count).round
+    points - (points_per_day * elapsed_days).round
   end
 
   def elapsed_days
