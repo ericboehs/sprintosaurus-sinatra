@@ -34,7 +34,7 @@ class App < Sinatra::Base
     ]
 
     @page = (params[:page] || 1).to_i
-    @per_page = 5
+    @per_page = 10
     @sprints = @project.sprints
     if params[:status] == 'completed'
       @sprints = @sprints.where("(start_date + duration * INTERVAL '1 day') < ?", Time.now).order(start_date: :desc)
