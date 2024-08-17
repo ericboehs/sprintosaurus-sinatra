@@ -1,7 +1,7 @@
 <% if @sprints.any? %>
   <div>
     <div class="sm:hidden">
-      <select id="tabs" name="tabs" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" onchange="location = this.value;">
+      <select id="tabs" name="tabs" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:text-white" onchange="location = this.value;">
         <option value="/projects/<%= @project.id %>" <%= 'selected' if params[:status].blank? %>>Active</option>
         <option value="/projects/<%= @project.id %>?status=completed" <%= 'selected' if params[:status] == 'completed' %>>Completed</option>
       </select>
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <ul role="list" class="divide-y divide-gray-100">
+  <ul role="list" class="divide-y divide-gray-100 dark:divide-gray-800">
     <% @sprints.order(start_date: :desc).each do |sprint| %>
       <li class="flex items-center justify-between gap-x-6 py-5">
         <div class="min-w-0">
