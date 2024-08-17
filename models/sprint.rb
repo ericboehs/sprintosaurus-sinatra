@@ -51,7 +51,7 @@ class Sprint < ActiveRecord::Base
   end
 
   def off_track_by
-    ((points_remaining - ideal_points_remaining).to_f / points * 100).round
+    points == 0 ? 0 : ((points_remaining - ideal_points_remaining).to_f / points * 100).round
   end
 
   def working_days(start_date, end_date)

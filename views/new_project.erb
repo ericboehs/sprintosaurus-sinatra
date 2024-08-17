@@ -1,31 +1,27 @@
-<div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-2xl w-full space-y-8 bg-white p-6 rounded-lg shadow-md">
-    <form action="/projects" method="post">
-      <div class="space-y-12">
-        <div class="border-gray-900/10 pb-12">
-          <h2 class="text-base font-semibold leading-7 text-gray-900">New Project</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">Enter the URL for the GitHub Project you would like to start tracking.</p>
+<% content_for(:title) do %>
+  <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-400">Add Project</h1>
+<% end %>
+<% content_for(:subtitle) do %>
+  <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">Enter the URL for the GitHub Project you would like to start tracking.</p>
+<% end %>
 
-          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div class="sm:col-span-6">
-              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">URL</label>
-              <div class="mt-2">
-                <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 sm:max-w-xl">
-                  <input required type="text" name="url" id="url" pattern="^(https?:\/\/)?(www\.)?github\.com\/orgs\/[^\/]+\/projects\/\d+$" autofocus="autofocus" autocomplete="url" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="https://github.com/dep...">
-                </div>
-              </div>
-            </div>
-          </div>
+<form action="/projects" method="post">
+  <div class="space-y-6">
+    <div class="border-b border-gray-200 pb-6 dark:border-gray-700">
+      <label for="url" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">URL</label>
+      <div class="mt-2">
+        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 sm:max-w-xl dark:ring-gray-700">
+          <input required type="text" name="url" id="url" pattern="^(https?:\/\/)?(www\.)?github\.com\/orgs\/[^\/]+\/projects\/\d+$" autofocus="autofocus" autocomplete="url" class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-gray-800 dark:text-gray-300 dark:placeholder:text-gray-600" placeholder="https://github.com/dep...">
         </div>
       </div>
-
-      <div class="mt-6 flex items-center gap-x-6 justify-end">
-        <a href="/" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-        <button type="submit" data-disable-with="Saving..." class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
-      </div>
-    </form>
+    </div>
   </div>
-</div>
+
+  <div class="mt-6 flex items-center gap-x-6 justify-end">
+    <a href="/" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100 hover:underline">Cancel</a>
+    <button type="submit" data-disable-with="Saving..." class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-800 dark:hover:bg-indigo-700 dark:focus-visible:outline-indigo-700">Save</button>
+  </div>
+</form>
 
 <script>
   document.querySelector('form').addEventListener('submit', function() {

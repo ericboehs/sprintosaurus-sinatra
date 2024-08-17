@@ -1,9 +1,9 @@
 <ul role="list" class="divide-y divide-gray-100">
   <li class="flex items-center justify-between gap-x-6 py-1">
     <div class="min-w-0">
-      <div class="flex items-start gap-x-2">
+      <div class="flex items-center gap-x-2">
         <% if issue.open? %>
-          <div class="pt-1">
+          <div class="pt-0">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-4 text-green-700" aria-label="issue-opened" role="img">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M3.515 3.515a12 12 0 1116.97 16.97 12 12 0 01-16.97-16.97zm1.59 1.59a9.75 9.75 0 1013.79 13.79 9.75 9.75 0 00-13.79-13.79zm8.486 8.486a2.25 2.25 0 11-3.182-3.183 2.25 2.25 0 013.182 3.183z" fill="currentColor" />
             </svg>
@@ -15,30 +15,31 @@
             </svg>
           </div>
         <% end %>
-        <p class="text-sm font-semibold leading-6 text-gray-900"><a href="<%= issue.url %>" target="_blank" class="hover:underline"><%= issue.title %></a></p>
+        <p class="text-sm truncate font-semibold leading-6 text-gray-900 dark:text-gray-300"><a href="<%= issue.url %>" target="_blank" class="hover:underline"><%= issue.title %></a></p>
         <% if issue.unplanned?(sprint) %>
           <p class="mt-0.5 whitespace-nowrap rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/20">Unplanned</p>
         <% end %>
       </div>
-      <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-        <%= issue.repo %> #<%= issue.number %>
+      <div class="mt-1 flex flex-col sm:flex-row items-start sm:items-center gap-x-2 gap-y-1 sm:gap-y-0 text-xs leading-5 text-gray-500">
+        <span><%= issue.repo %> #<%= issue.number %></span>
         <p class="whitespace-nowrap">
-          Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
-            <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago
-          </time>
+        Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
+          <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago
+        </time>
         </p>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
-        </svg>
-
-        <p class="whitespace-nowrap">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+          </svg>
+          <p class="whitespace-nowrap ml-1">
           <%= issue.status %>
-        </p>
+          </p>
+        </div>
       </div>
     </div>
     <div class="flex flex-none items-center gap-x-4">
       <% if issue.points.present? %>
-        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10"><%= issue.points || '-' %></span>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-800 dark:text-indigo-300 dark:ring-indigo-700"><%= issue.points || '-' %></span>
       <% else %>
         <span class="text-gray-400 text-sm">Not estimated</span>
       <% end %>

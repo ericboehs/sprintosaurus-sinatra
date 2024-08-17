@@ -1,0 +1,21 @@
+<nav class="flex items-center justify-between" aria-label="Pagination">
+  <p class="truncate text-sm text-gray-700 dark:text-gray-500">
+    Showing
+    <span class="font-medium"><%= ((@page - 1) * @per_page) + 1 %></span>
+    to
+    <span class="font-medium"><%= [@page * @per_page, @total_items].min %></span>
+    of
+    <span class="font-medium"><%= @total_items %></span>
+    results
+  </p>
+  <div class="flex flex-1 justify-end">
+    <% query_params = request.GET.merge('page' => @page - 1) %>
+    <% if @page > 1 %>
+      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Previous</a>
+    <% end %>
+    <% query_params = request.GET.merge('page' => @page + 1) %>
+    <% if @page < @total_pages %>
+      <a href="?<%= URI.encode_www_form(query_params) %>" class="relative ml-3 inline-flex items-center justify-center h-9 px-3 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-950 dark:hover:text-white dark:hover:bg-black">Next</a>
+    <% end %>
+  </div>
+</nav>
