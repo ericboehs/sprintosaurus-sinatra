@@ -1,7 +1,7 @@
-<% if @sprints.any? %>
+<% if @paginated_sprints.any? %>
   <div>
     <div class="sm:hidden">
-      <select id="tabs" name="tabs" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:text-white" onchange="location = this.value;">
+      <select id="tabs" name="tabs" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:text-gray-400" onchange="location = this.value;">
         <option value="/projects/<%= @project.id %>" <%= 'selected' if params[:status].blank? %>>Active</option>
         <option value="/projects/<%= @project.id %>?status=completed" <%= 'selected' if params[:status] == 'completed' %>>Completed</option>
       </select>
@@ -15,21 +15,21 @@
   </div>
 
   <ul role="list" class="divide-y divide-gray-100 dark:divide-gray-800">
-    <% @sprints.order(start_date: :desc).each do |sprint| %>
+    <% @paginated_sprints.each do |sprint| %>
       <li class="flex items-center justify-between gap-x-6 py-5">
         <div class="min-w-0">
           <div class="flex items-start gap-x-1">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 dark:text-gray-500">
               <path stroke-linecap="round" stroke-linejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
             </svg>
 
             <p class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"><a href="/sprints/<%= sprint.id %>" class="hover:underline"><%= sprint.title %></a></p>
             <% if sprint.planned? %>
-              <p class="mt-0.5 whitespace-nowrap rounded-md bg-gray-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-600/20 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700">Planned</p>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-gray-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-600/20 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700">Planned</p>
             <% elsif sprint.in_progress? %>
-              <p class="mt-0.5 whitespace-nowrap rounded-md bg-blue-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-blue-600 ring-1 ring-inset ring-blue-500/10 dark:bg-blue-900 dark:text-blue-300 dark:ring-blue-700">In progress</p>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-blue-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-blue-600 ring-1 ring-inset ring-blue-500/10 dark:bg-blue-900 dark:text-blue-400 dark:ring-blue-700">In progress</p>
             <% elsif sprint.completed? %>
-              <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900 dark:text-green-300 dark:ring-green-700">Complete</p>
+              <p class="mt-0.5 whitespace-nowrap rounded-md bg-green-50 ml-2 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900 dark:text-green-400 dark:ring-green-700">Complete</p>
             <% end %>
           </div>
           <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
@@ -55,7 +55,7 @@
 
     <% if @total_pages > 1 %>
       <% content_for :card_footer do %>
-        <%= erb :_pagination %>
+        <%= erb :_pagination, locals: { resource: @sprints } %>
       <% end %>
     <% end %>
   </ul>

@@ -1,6 +1,6 @@
 # Sprint Model
 class Sprint < ActiveRecord::Base
-  belongs_to :project
+  belongs_to :project, touch: true
   has_many :issues_sprints, dependent: :destroy
   has_many :issues, -> { order issues_sprints: { created_at: :asc } }, dependent: :destroy, through: :issues_sprints do
     def open

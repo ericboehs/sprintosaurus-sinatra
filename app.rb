@@ -7,9 +7,26 @@ require_relative './job'
 class App < Sinatra::Base
   include ActionView::Helpers::DateHelper
   helpers Sinatra::ContentFor
+  helpers do
+    def paginate(collection, page: 1, per_page: 10)
+      total_items = collection.count
+      paginated_collection = collection.limit(per_page).offset((page - 1) * per_page)
+      total_pages = (total_items / per_page.to_f).ceil
+      @total_pages = total_pages
+
+      {
+        collection: paginated_collection,
+        total_pages:,
+        total_items:,
+        current_page: page,
+        per_page:
+      }
+    end
+  end
 
   get '/' do
-    @projects = Project.all
+    @projects = Project.all.order(updated_at: :desc)
+    @paginated_projects = paginate(@projects, page: (params[:page] || 1).to_i)[:collection]
     erb :projects
   end
 
@@ -33,18 +50,14 @@ class App < Sinatra::Base
       { title: @project.title&.truncate(20) }
     ]
 
-    @page = (params[:page] || 1).to_i
-    @per_page = 10
     @sprints = @project.sprints
     if params[:status] == 'completed'
       @sprints = @sprints.where("(start_date + duration * INTERVAL '1 day') < ?", Time.now).order(start_date: :desc)
     else
       @sprints = @sprints.where("(start_date + duration * INTERVAL '1 day') > ?", Time.now).order(start_date: :asc)
     end
-    @total_items = @sprints.count
-    @sprints = @sprints.limit(@per_page).offset((@page - 1) * @per_page)
-    @total_pages = (@total_items / @per_page.to_f).ceil
 
+    @paginated_sprints = paginate(@sprints, page: (params[:page] || 1).to_i)[:collection]
     erb :project
   end
 
