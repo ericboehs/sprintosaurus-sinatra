@@ -47,7 +47,7 @@ class Sprint < ActiveRecord::Base
   end
 
   def elapsed_days
-    completed? ? duration : working_days(start_date, Date.today)
+    working_days(start_date, completed? ? end_date : Date.today)
   end
 
   def off_track_by
