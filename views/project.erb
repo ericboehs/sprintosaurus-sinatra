@@ -39,11 +39,11 @@
 
             <p class="whitespace-nowrap">
               <time datetime="<%= sprint.start_date.strftime('%Y-%m-%dT%H:%MZ') %>">
-                <%= sprint.start_date.year == Date.today.year ? sprint.start_date.strftime("%b %d") : sprint.start_date.strftime("%b %d, %Y") %>
+                <%= sprint.start_date.year == Date.today.year ? sprint.start_date.strftime("%b %-d") : sprint.start_date.strftime("%b %-d, %Y") %>
               </time>
               &ndash;
               <time datetime="<%= sprint.end_date.strftime('%Y-%m-%dT%H:%MZ') %>">
-                <%= sprint.end_date.year == Date.today.year ? (sprint.start_date.month == sprint.end_date.month ? sprint.end_date.strftime("%d") : sprint.end_date.strftime("%b %d")) : sprint.end_date.strftime("%b %d, %Y") %>
+                <%= sprint.end_date.year == Date.today.year ? (sprint.start_date.month == sprint.end_date.month ? sprint.end_date.strftime("%-d") : sprint.end_date.strftime("%b %-d")) : sprint.end_date.strftime("%b %-d, %Y") %>
               </time>
             </p>
           </div>
