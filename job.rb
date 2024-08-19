@@ -51,7 +51,7 @@ class Job
           value = node[:text] || node[:name] || node[:number] || node[:title]
           [key, value]
         end.compact.to_h
-        issue.points = fields['Points']
+        issue.points = fields['Points'] || fields['Estimate']
         issue.status = fields['Status']
         issue.state = issue_data[:content][:state]
         issue.url = issue_data[:content][:url]
