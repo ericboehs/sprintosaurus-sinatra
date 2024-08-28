@@ -22,11 +22,23 @@
       </div>
       <div class="mt-1 flex flex-col sm:flex-row items-start sm:items-center gap-x-2 gap-y-1 sm:gap-y-0 text-xs leading-5 text-gray-500 dark:text-gray-200">
         <span><%= issue.repo %> #<%= issue.number %></span>
-        <p class="whitespace-nowrap">
-        Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
-          <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago
-        </time>
-        </p>
+        <% if issue.added_at_creation?(sprint) %>
+          <div class="relative inline-block group">
+            <button class="whitespace-nowrap">
+              Created <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
+                <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago</time>*
+            </button>
+            <div class="hidden absolute bottom-full left-1/2 transform md:-translate-x-1/2 mb-2 bg-white text-black border border-gray-300 rounded-md shadow-lg p-4 group-hover:block w-80 dark:text-white dark:border-gray-700 dark:bg-gray-900">
+              Issue was added to Sprint before the Project was imported. Issue creation date shown.
+            </div>
+          </div>
+        <% else %>
+          <p class="whitespace-nowrap">
+            Added <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
+              <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago
+            </time>
+          </p>
+        <% end %>
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />

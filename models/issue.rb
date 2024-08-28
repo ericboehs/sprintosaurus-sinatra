@@ -19,4 +19,16 @@ class Issue < ActiveRecord::Base
     issue_sprint = issues_sprints.find_by(sprint:)
     issue_sprint.created_at > issue_sprint.sprint.start_date
   end
+
+  def added_at(sprint)
+    issues_sprints.find_by(sprint:).created_at
+  end
+
+  def added_at_creation?(sprint)
+    added_at(sprint) == created_at
+  end
+
+  def added_or_created(sprint)
+    added_at_creation?(sprint) ? 'created' : 'added'
+  end
 end

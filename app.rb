@@ -71,4 +71,11 @@ class App < Sinatra::Base
     ]
     erb :sprint
   end
+
+  get '/sprints/:id/csv' do
+    @sprint = Sprint.find(params[:id])
+    content_type 'application/csv'
+    attachment "#{@sprint.title.gsub(/[^0-9A-Za-z.-]/, '_').downcase}.csv"
+    @sprint.issues_to_csv
+  end
 end

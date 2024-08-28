@@ -9,6 +9,7 @@ $logger ||= Logger.new $stdout # rubocop:disable Style/GlobalVars
 require 'bundler/setup'
 Bundler.require 'default', ENV['RACK_ENV']
 
+require 'csv'
 require 'dotenv'
 require 'github/project'
 

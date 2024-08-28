@@ -12,6 +12,23 @@ class Sprint < ActiveRecord::Base
     end
   end
 
+  def issues_to_csv
+    CSV.generate(headers: true) do |csv|
+      csv << ['Issue ID', 'Title', 'Status', 'Points', 'Added At', 'Closed At']
+
+      issues.each do |issue|
+        csv << [
+          issue.id,
+          issue.title,
+          issue.closed? ? 'Closed' : 'Open',
+          issue.points,
+          issue.added_at(self)&.strftime('%Y-%m-%d'),
+          issue.closed_at&.strftime('%Y-%m-%d')
+        ]
+      end
+    end
+  end
+
   def end_date
     start_date + duration.days - 1
   end
