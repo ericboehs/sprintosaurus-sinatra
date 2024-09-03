@@ -14,16 +14,18 @@ class Sprint < ActiveRecord::Base
 
   def issues_to_csv
     CSV.generate(headers: true) do |csv|
-      csv << ['Issue ID', 'Title', 'Status', 'Points', 'Added At', 'Closed At']
+      csv << ['Issue Number', 'Title', 'Sprint Status', 'Closed', 'Points', 'Added At', 'Closed At', 'Assignee(s)']
 
       issues.each do |issue|
         csv << [
-          issue.id,
+          issue.number,
           issue.title,
+          issue.status,
           issue.closed? ? 'Closed' : 'Open',
           issue.points,
           issue.added_at(self)&.strftime('%Y-%m-%d'),
-          issue.closed_at&.strftime('%Y-%m-%d')
+          issue.closed_at&.strftime('%Y-%m-%d'),
+          issue.closed_at&.strftime('%Y-%m-%d'),
         ]
       end
     end
