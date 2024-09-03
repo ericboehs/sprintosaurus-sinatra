@@ -55,7 +55,7 @@ class Job
         issue.status = fields['Status']
         issue.state = issue_data[:content][:state]
         issue.url = issue_data[:content][:url]
-        issue.data = issue_data
+        issue.data = issue_data.to_h
         issue.closed_at = issue_data[:content][:closedAt]
         issue.created_at = issue_data[:content][:createdAt] if issue_data[:content][:createdAt].present?
         issue.save
