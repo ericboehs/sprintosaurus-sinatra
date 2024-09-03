@@ -133,6 +133,11 @@ module Github
                           login
                         }
                       }
+                      labels(first: 20) {
+                        nodes {
+                          name
+                        }
+                      }
                     }
                     ... on PullRequest {
                       title
@@ -144,6 +149,11 @@ module Github
                       assignees(first: 10) {
                         nodes {
                           login
+                        }
+                      }
+                      labels(first: 20) {
+                        nodes {
+                          name
                         }
                       }
                     }

@@ -25,7 +25,7 @@ class Sprint < ActiveRecord::Base
           issue.points,
           issue.added_at(self)&.strftime('%Y-%m-%d'),
           issue.closed_at&.strftime('%Y-%m-%d'),
-          issue.closed_at&.strftime('%Y-%m-%d'),
+          issue.labels.join(', ')
         ]
       end
     end

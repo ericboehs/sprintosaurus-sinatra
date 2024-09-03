@@ -7,6 +7,10 @@ class Issue < ActiveRecord::Base
     url.match(%r{github.com/([^/]+)/([^/]+)})&.captures&.last
   end
 
+  def labels
+    data.dig('content', 'labels', 'nodes')&.map { |node| node['name'] } || []
+  end
+
   def open?
     state == 'OPEN'
   end
