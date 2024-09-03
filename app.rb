@@ -47,7 +47,7 @@ class App < Sinatra::Base
     @title = @project.title
     @breadcrumbs = [
       { title: 'Projects', path: '/' },
-      { title: @project.title&.truncate(20) }
+      { title: @project.title }
     ]
 
     @sprints = @project.sprints
