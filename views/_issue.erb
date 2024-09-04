@@ -50,6 +50,16 @@
       </div>
     </div>
     <div class="flex flex-none items-center gap-x-4">
+      <% if issue.assignees.present? %>
+        <div class="isolate flex -space-x-1 overflow-hidden">
+          <% issue.assignees.each_with_index do |assignee, index| %>
+            <a href="https://github.com/<%= assignee %>" class="transition duration-200 ease-in-out transform hover:scale-110">
+              <img class="relative z-<%= (issue.assignees.count - index) * 10 %> inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-900" src="https://github.com/<%= assignee %>.png" alt="<%= assignee %>">
+            </a>
+          <% end %>
+        </div>
+      <% end %>
+
       <% if issue.points.present? %>
         <span class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-500 dark:text-indigo-100 dark:ring-indigo-600"><%= issue.points || '-' %></span>
       <% else %>
