@@ -80,8 +80,8 @@
         <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow dark:divide-gray-800 dark:bg-gray-900 dark:text-gray-200">
           <div class="px-2 py-5 sm:px-6">
             <div class="min-w-0 flex-1">
-              <% if content_for?(:title) %>
-                <%= yield_content(:title) %>
+              <% if content_for? :title %>
+                <%= yield_content :title %>
               <% elsif @title %>
                 <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-gray-200"><%= @title %></h1>
               <% end %>
@@ -115,5 +115,17 @@
     var button = document.querySelector('button[type="button"]');
     button.addEventListener('click', toggleMenu);
   </script>
+  <script>
+    // Add a title attribute to time elements for hover text
+    document.querySelectorAll('time').forEach(timeElement => {
+      if (!timeElement.getAttribute('datetime') || timeElement.getAttribute('title')) return
+
+      date = new Date(timeElement.getAttribute('datetime'))
+      timeElement.setAttribute('title', date.toLocaleString('en', {timeZoneName: 'short'}))
+    })
+  </script>
+  <% if content_for? :scripts %>
+    <%= yield_content :scripts %>
+  <% end %>
 </body>
 </html>

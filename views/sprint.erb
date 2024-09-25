@@ -261,3 +261,17 @@
     <% end %>
   </div>
 </div>
+<% content_for(:scripts) do %>
+  <script>
+    // Tooltips
+    document.querySelectorAll('[tooltip]').forEach(tooltip => {
+      document.addEventListener('click', event => {
+        // Don't hide tooltip if the click is within the tooltip or the trigger
+        if (tooltip.classList.contains('hidden') || tooltip.contains(event.target) || trigger.contains(event.target)) return
+
+        event.preventDefault()
+        tooltip.classList.add('hidden')
+      })
+    })
+  </script>
+<% end %>

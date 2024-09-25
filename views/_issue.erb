@@ -23,13 +23,15 @@
       <div class="mt-1 flex flex-col sm:flex-row items-start sm:items-center gap-x-2 gap-y-1 sm:gap-y-0 text-xs leading-5 text-gray-500 dark:text-gray-200">
         <span><%= issue.repo %> #<%= issue.number %></span>
         <% if issue.added_at_creation?(sprint) %>
-          <div class="relative inline-block group">
-            <button class="whitespace-nowrap">
-              Created <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.strftime('%Y-%m-%dT%H:%MZ') %>">
+          <div class="relative group">
+            <button class="whitespace-nowrap underline decoration-dashed" tooltip-for="nextSibling">
+              Created <time datetime="<%= issue.issues_sprints.find_by(sprint:).created_at.iso8601 %>">
                 <%= time_ago_in_words(issue.issues_sprints.find_by(sprint:).created_at) %> ago</time>*
             </button>
-            <div class="hidden absolute bottom-full left-1/2 transform md:-translate-x-1/2 mb-2 bg-white text-black border border-gray-300 rounded-md shadow-lg p-4 group-hover:block w-80 dark:text-white dark:border-gray-700 dark:bg-gray-900">
-              Issue was added to Sprint before the Project was imported. Issue creation date shown.
+            <div tooltip class="absolute w-screen md:w-auto z-[1000] group-hover:visible group-hover:opacity-100 invisible transition-opacity opacity-0">
+              <div class="md:whitespace-nowrap absolute mx-auto bottom-6 min-w-min md:-left-1 w-4/5 px-3 py-2 text-sm font-medium text-white duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                Issue was added to Sprint before the Project was imported. Issue creation date shown.
+              </div>
             </div>
           </div>
         <% else %>
@@ -51,11 +53,18 @@
     </div>
     <div class="flex flex-none items-center gap-x-4">
       <% if issue.assignees.present? %>
-        <div class="isolate flex -space-x-1 overflow-hidden">
+        <div class="isolate flex -space-x-1">
           <% issue.assignees.each_with_index do |assignee, index| %>
-            <a href="https://github.com/<%= assignee %>" class="transition duration-200 ease-in-out transform hover:scale-110">
-              <img class="relative z-<%= (issue.assignees.count - index) * 10 %> inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-900" src="https://github.com/<%= assignee %>.png" alt="<%= assignee %>">
-            </a>
+            <div class="relative inline-block group">
+              <button class="whitespace-nowrap underline decoration-dashed" tooltip-for="nextSibling">
+                <img class="relative z-[<%= (issue.assignees.count - index) * 10 %>] hover:z-[300] inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-900 transition duration-200 ease-in-out transform hover:scale-110" src="https://avatars.githubusercontent.com/<%= assignee %>" alt="<%= assignee %>">
+              </button>
+              <div tooltip class="absolute md:right-16 w-screen md:w-auto z-[1000] group-hover:visible group-hover:opacity-100 invisible transition-opacity opacity-0">
+                <div class="md:whitespace-nowrap absolute mx-auto bottom-6 min-w-min md:-left-1 w-4/5 px-3 py-2 text-sm font-medium text-white duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                  <%= assignee %>
+                </div>
+              </div>
+            </div>
           <% end %>
         </div>
       <% end %>
