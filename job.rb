@@ -5,6 +5,18 @@ require_relative './environment'
 # Fetches GH Project Issues
 class Job
   class << self
+    def handle_rate_limit(response)
+      remaining = response.headers['x-ratelimit-remaining'].to_i
+      reset_time = response.headers['x-ratelimit-reset'].to_i
+      limit = response.headers['x-ratelimit-limit'].to_i
+
+      return unless remaining < 10
+
+      sleep_time = [reset_time - Time.now.to_i, 0].max
+      $logger.info "Rate limit almost exceeded, sleeping for #{sleep_time} seconds..."
+      sleep(sleep_time)
+    end
+
     def persist_issues(project_info, issues)
       project = Project.find_or_initialize_by(number: project_info[:number]).tap do |project|
         project.title = project_info[:title]
@@ -72,8 +84,12 @@ class Job
 
       projects.each do |project|
         organization, number = project.url.match(%r{github.com/orgs/([^/]+)/projects/(\d+)}).captures
-        project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
-        persist_issues project.info, project.issues
+        github_project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
+        
+        response = github_project.query(github_project.build_query)
+        handle_rate_limit(response)
+        
+        persist_issues github_project.info, github_project.issues
       end
 
       $logger.info 'Finished Job.' # rubocop:disable Style/GlobalVars
