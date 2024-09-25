@@ -24,6 +24,8 @@ class App < Sinatra::Base
     end
   end
 
+  set :public_folder, File.dirname(__FILE__) + '/public'
+
   get '/' do
     @projects = Project.all.order(updated_at: :desc)
     @paginated_projects = paginate(@projects, page: (params[:page] || 1).to_i)[:collection]
@@ -31,11 +33,13 @@ class App < Sinatra::Base
   end
 
   get '/projects/new' do
+    @title = 'New Project'
     @project = Project.new
     erb :new_project
   end
 
   post '/projects' do
+    @title = 'Projects'
     number = params['url'].match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
     project = Project.find_by(number:)
     project ||= Project.create(title: "Pending Sync for #{number}", number:, url: params['url'])
