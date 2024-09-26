@@ -34,6 +34,8 @@ module Github
 
     def active_sprints
       sprints.select do |sprint|
+        next unless sprint[:start_date]
+
         Date.parse(sprint[:start_date]) <= Date.today
       end
     end
