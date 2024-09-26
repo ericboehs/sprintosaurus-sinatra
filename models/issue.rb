@@ -23,6 +23,10 @@ class Issue < ActiveRecord::Base
     state == 'CLOSED'
   end
 
+  def merged?
+    state == 'MERGED'
+  end
+
   def unplanned?(sprint)
     issue_sprint = issues_sprints.find_by(sprint:)
     issue_sprint.created_at > issue_sprint.sprint.start_date

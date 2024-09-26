@@ -8,7 +8,7 @@ class Sprint < ActiveRecord::Base
     end
 
     def closed
-      where state: 'CLOSED'
+      where state: %w[CLOSED MERGED]
     end
   end
 

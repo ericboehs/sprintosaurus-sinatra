@@ -82,7 +82,7 @@
       </h3>
       <div class="flex items-center">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
-          <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
+          <div class="bg-purple-600 h-2.5 rounded-full" style="width: <%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
         </div>
         <span class="ml-2 text-gray-700 font-semibold"><%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%</span>
       </div>
