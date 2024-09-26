@@ -137,6 +137,7 @@ DEPENDENCIES
   actionview
   activerecord
   csv
+  faraday
   faraday-multipart
   faraday-retry
   minitest

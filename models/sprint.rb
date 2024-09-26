@@ -2,7 +2,7 @@
 class Sprint < ActiveRecord::Base
   belongs_to :project, touch: true
   has_many :issues_sprints, dependent: :destroy
-  has_many :issues, -> { order issues_sprints: { created_at: :asc } }, dependent: :destroy, through: :issues_sprints do
+  has_many :issues, -> { order('issues_sprints.created_at ASC') }, through: :issues_sprints do
     def open
       where state: 'OPEN'
     end
@@ -10,6 +10,10 @@ class Sprint < ActiveRecord::Base
     def closed
       where state: 'CLOSED'
     end
+  end
+
+  def all_issues
+    issues.unscope(where: :removed_at)
   end
 
   def issues_to_csv

@@ -16,11 +16,26 @@ module Github
     # end
 
     def sprints
-      issues
+      @sprints ||=
+        issues
         .map { |issue| issue[:fieldValues][:nodes].select { |node| node[:field] && node[:field][:name] == 'Sprint' } }
         .flatten
         .uniq { |node| [node[:field][:name], node[:startDate]] }
-        .sort_by { |sprint| sprint[:startDate] }
+        .map do |sprint|
+          {
+            title: sprint[:title],
+            start_date: sprint[:startDate],
+            duration: sprint[:duration],
+            iteration_id: sprint[:iterationId]
+          }
+        end
+        .sort_by { |sprint| sprint[:start_date] }
+    end
+
+    def active_sprints
+      sprints.select do |sprint|
+        Date.parse(sprint[:start_date]) <= Date.today
+      end
     end
 
     def issues_by_sprint(sprint_title)

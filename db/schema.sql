@@ -60,8 +60,30 @@ CREATE TABLE public.issues_sprints (
     issue_id integer NOT NULL,
     sprint_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    id integer NOT NULL,
+    removed_at timestamp without time zone
 );
+
+
+--
+-- Name: issues_sprints_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.issues_sprints_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: issues_sprints_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.issues_sprints_id_seq OWNED BY public.issues_sprints.id;
 
 
 --
@@ -153,6 +175,13 @@ ALTER TABLE ONLY public.issues ALTER COLUMN id SET DEFAULT nextval('public.issue
 
 
 --
+-- Name: issues_sprints id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.issues_sprints ALTER COLUMN id SET DEFAULT nextval('public.issues_sprints_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -172,6 +201,14 @@ ALTER TABLE ONLY public.sprints ALTER COLUMN id SET DEFAULT nextval('public.spri
 
 ALTER TABLE ONLY public.issues
     ADD CONSTRAINT issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: issues_sprints issues_sprints_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.issues_sprints
+    ADD CONSTRAINT issues_sprints_pkey PRIMARY KEY (id);
 
 
 --
@@ -237,4 +274,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20240714000003'),
     ('20240714000004'),
     ('20240815180317'),
-    ('20240816184820');
+    ('20240816184820'),
+    ('20240926000001');
