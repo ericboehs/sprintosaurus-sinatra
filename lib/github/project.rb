@@ -211,6 +211,7 @@ module Github
     end
 
     def query(query)
+      handle_rate_limit
       response = client.post '/graphql', { query: }.to_json
       p response if ENV['DEBUG']
       if response[:errors]
@@ -222,7 +223,18 @@ module Github
     end
 
     def client
-      @client = Octokit::Client.new access_token: token
+      @client ||= Octokit::Client.new(access_token: token)
+    end
+
+    private
+
+    def handle_rate_limit
+      rate_limit = client.rate_limit
+      return unless rate_limit.remaining < 10
+
+      sleep_time = [rate_limit.resets_in, 0].max
+      $logger.info "Rate limit almost exceeded, sleeping for #{sleep_time} seconds..."
+      sleep sleep_time
     end
   end
 end

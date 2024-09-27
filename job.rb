@@ -5,19 +5,10 @@ require_relative './environment'
 # Fetches GH Project Issues
 class Job
   class << self
-    def handle_rate_limit(response)
-      return unless response.respond_to?(:headers) && response.headers
-
-      remaining = response.headers['x-ratelimit-remaining'].to_i
-      reset_time = response.headers['x-ratelimit-reset'].to_i
-      limit = response.headers['x-ratelimit-limit'].to_i
-
-      return unless remaining < 10
-
-      sleep_time = [reset_time - Time.now.to_i, 0].max
-      $logger.info "Rate limit almost exceeded, sleeping for #{sleep_time} seconds..."
-      sleep(sleep_time)
+    def logger
+      $logger
     end
+
 
     def persist_issues(project_info, sprints, issues)
       project = Project.find_or_initialize_by(number: project_info[:number]).tap do |project|
@@ -90,10 +81,11 @@ class Job
 
     def run(projects = Project.all)
       if projects.empty?
-        ENV['SEED_GH_PROJECT_URLS'].split(',').each do |url|
+        ENV['SEED_GH_PROJECT_URLS'].to_s.split(',').each do |url|
           number = url.match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
           Project.create(number:, url:)
         end
+        projects = Project.all
       end
 
       projects.each do |project|
@@ -101,9 +93,6 @@ class Job
         github_project = Github::Project.new(token: ENV.fetch('GH_TOKEN'), organization:, number:)
 
         begin
-          response = github_project.query(github_project.build_query)
-          handle_rate_limit(response)
-
           persist_issues github_project.info, github_project.active_sprints, github_project.issues
         rescue => e
           $logger.error "Error fetching project data: #{e.message}"
