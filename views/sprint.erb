@@ -48,9 +48,9 @@
     <canvas id="sprintChart"></canvas>
   </div>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 gap-12 mt-6">
     <!-- Story Points Progress Bar -->
-    <div class="mb-4">
+    <div class="mb-4 space-y-2">
       <h3 class="font-semibold mb-2 dark:text-gray-200">Story Points</h3>
       <div class="flex items-center">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
@@ -75,7 +75,7 @@
     </div>
 
     <!-- Issues and Pull Requests Progress Bar -->
-    <div class="mb-4">
+    <div class="mb-4 space-y-2">
       <h3 class="font-semibold mb-2 dark:text-gray-200">
         <span class="hidden sm:inline">Issues and Pull Requests</span>
         <span class="sm:hidden">Issues and PRs</span>
@@ -185,11 +185,6 @@
         maintainAspectRatio: false,
         scales: {
           x: {
-            title: {
-              display: true,
-              text: 'Date',
-              color: labelColor
-            },
             ticks: {
               color: labelColor
             }
