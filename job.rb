@@ -5,6 +5,10 @@ require_relative './environment'
 # Fetches GH Project Issues
 class Job
   class << self
+    def logger
+      $logger
+    end
+
     def handle_rate_limit(response)
       return unless response.respond_to?(:headers) && response.headers
 
@@ -90,10 +94,11 @@ class Job
 
     def run(projects = Project.all)
       if projects.empty?
-        ENV['SEED_GH_PROJECT_URLS'].split(',').each do |url|
+        ENV['SEED_GH_PROJECT_URLS'].to_s.split(',').each do |url|
           number = url.match(%r{github.com/orgs/[^/]+/projects/(\d+)}).captures.first
           Project.create(number:, url:)
         end
+        projects = Project.all
       end
 
       projects.each do |project|

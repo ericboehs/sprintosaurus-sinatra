@@ -22,4 +22,5 @@ require_relative './models/issues_sprint'
 require_relative './models/sprint'
 require_relative './models/project'
 
-ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+database_url = ENV['RACK_ENV'] == "test" ? ENV['TEST_DATABASE_URL'] : ENV['DATABASE_URL']
+ActiveRecord::Base.establish_connection(database_url)

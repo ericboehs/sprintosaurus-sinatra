@@ -60,7 +60,9 @@ GEM
       nokogiri (>= 1.12.0)
     method_source (1.1.0)
     mini_portile2 (2.8.7)
-    minitest (5.25.0)
+    minitest (5.25.1)
+    mocha (2.4.5)
+      ruby2_keywords (>= 0.0.5)
     multi_json (1.15.0)
     multipart-post (2.4.1)
     mustermann (3.0.2)
@@ -141,6 +143,7 @@ DEPENDENCIES
   faraday-multipart
   faraday-retry
   minitest
+  mocha
   octokit
   pg
   pry
