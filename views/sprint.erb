@@ -44,7 +44,7 @@
 <% end %>
 
 <div class="w-full max-w-4xl mx-auto p-4 bg-white shadow rounded-lg dark:bg-black print:shadow-none">
-  <div class="relative">
+  <div class="relative h-[350px]">
     <canvas id="sprintChart"></canvas>
   </div>
 
@@ -181,6 +181,8 @@
         ]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: {
             title: {
