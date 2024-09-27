@@ -28,7 +28,9 @@ CREATE TABLE public.issues (
     data jsonb,
     closed_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    github_node_id text,
+    project_id integer
 );
 
 
@@ -236,6 +238,20 @@ ALTER TABLE ONLY public.sprints
 
 
 --
+-- Name: idx_issues_github_node_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_issues_github_node_id ON public.issues USING btree (github_node_id);
+
+
+--
+-- Name: idx_issues_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_issues_project_id ON public.issues USING btree (project_id);
+
+
+--
 -- Name: sprints fk_project; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -275,4 +291,6 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20240714000004'),
     ('20240815180317'),
     ('20240816184820'),
-    ('20240926000001');
+    ('20240926000001'),
+    ('20240927000001'),
+    ('20240927000002');

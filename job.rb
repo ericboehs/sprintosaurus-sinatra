@@ -33,8 +33,14 @@ class Job
       end
 
       issues.each do |issue_data|
-        issue = Issue.find_or_initialize_by(number: issue_data[:content][:number])
+        issue = Issue.find_by(github_node_id: issue_data[:id]) # Support existing issues
+        issue ||= project.issues.find_by(number: issue_data[:content][:number])
+        issue ||= Issue.find_by(number: issue_data[:content][:number])
+        issue ||= Issue.new
+        issue.github_node_id = issue_data[:id]
+        issue.number = issue_data[:content][:number]
         issue.title = issue_data[:content][:title]
+        issue.project = project
         iteration_id =
           issue_data[:fieldValues][:nodes]
           .select { |node| node.dig(:field, :name) == 'Sprint' && node.key?(:iterationId) }

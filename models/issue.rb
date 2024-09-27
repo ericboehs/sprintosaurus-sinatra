@@ -1,5 +1,6 @@
 # Issue Model
 class Issue < ActiveRecord::Base
+  belongs_to :project
   has_many :issues_sprints, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :sprints, through: :issues_sprints, dependent: :destroy
 
