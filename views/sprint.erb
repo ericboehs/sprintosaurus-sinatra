@@ -44,8 +44,9 @@
 <% end %>
 
 <div class="w-full max-w-4xl mx-auto p-4 bg-white shadow rounded-lg dark:bg-black print:shadow-none">
-  <div class="relative h-[350px]">
-    <canvas id="sprintChart"></canvas>
+  <div class="grid grid-cols-1 gap-6">
+    <%= erb :_points_chart, locals: { sprint: sprint } %>
+    <%= erb :_issues_chart, locals: { sprint: sprint } %>
   </div>
 
   <div class="grid grid-cols-2 gap-12 mt-6">
@@ -75,12 +76,12 @@
     </div>
 
     <!-- Issues and Pull Requests Progress Bar -->
-    <div class="mb-4 space-y-2">
-      <h3 class="font-semibold mb-2 dark:text-gray-200">
+    <div id="issuesPRsSection" class="mb-4 space-y-2">
+      <h3 class="font-semibold mb-2 dark:text-gray-200 cursor-pointer">
         <span class="hidden sm:inline">Issues and Pull Requests</span>
         <span class="sm:hidden">Issues and PRs</span>
       </h3>
-      <div class="flex items-center">
+      <div class="flex items-center cursor-pointer">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
           <div class="bg-purple-600 h-2.5 rounded-full" style="width: <%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
         </div>
@@ -105,103 +106,20 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var ctx = document.getElementById('sprintChart').getContext('2d');
-    var today = new Date().setHours(0, 0, 0, 0);
+  // Hover functionality for Issues and PRs chart
+  const issuesPRsSection = document.getElementById('issuesPRsSection');
+  const storyPointsSection = document.querySelector('.mb-4.space-y-2:not(#issuesPRsSection)');
+  const sprintIssuesChartContainer = document.getElementById('sprintIssuesChartContainer');
+  const sprintPointsChart = document.getElementById('sprintPointsChart').parentElement;
 
-    var labels = <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| date.strftime("%a %-d") }.to_json %>;
-    var remainingData = <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| sprint.issues.where("closed_at IS NULL OR closed_at > ?", date.end_of_day).sum(:points) }.to_json %>;
+  issuesPRsSection.addEventListener('mouseenter', () => {
+    sprintIssuesChartContainer.classList.remove('hidden');
+    sprintPointsChart.classList.add('hidden');
+  });
 
-    // Filter out future dates
-    var filteredRemainingData = [];
-    for (var i = 0; i < labels.length; i++) {
-      var date = new Date("<%= sprint.start_date.to_date.strftime('%Y-%m-%d') %>T00:00:00");
-      date.setDate(date.getDate() + i);
-      if (date <= today) {
-        filteredRemainingData.push(remainingData[i]);
-      } else {
-        break;
-      }
-    }
-
-    var isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var labelColor = isDarkMode ? 'white' : 'black';
-
-    var sprintChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Remaining',
-            data: filteredRemainingData,
-            borderColor: '#4d7c0f',
-            fill: true,
-            backgroundColor: 'rgba(26, 255, 5, 0.1)'
-          },
-          {
-            label: 'Ideal',
-            data: (function() {
-              var totalPoints = <%= sprint.points %>;
-              var startDate = new Date("<%= sprint.start_date.to_date.strftime('%Y-%m-%d') %>T00:00:00");
-              var endDate = new Date("<%= sprint.end_date.to_date.strftime('%Y-%m-%d') %>T00:00:00");
-              var idealData = [];
-              var currentPoints = totalPoints;
-
-              // Calculate the number of working days
-              var workingDays = 0;
-              for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                var dayOfWeek = d.getDay();
-                if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude weekends
-                  workingDays++;
-                }
-              }
-              
-              var pointsPerDay = totalPoints / workingDays;
-
-              for (var i = 0; i < labels.length; i++) {
-                var date = new Date("<%= sprint.start_date.to_date.strftime('%Y-%m-%d') %>T00:00:00");
-                date.setDate(date.getDate() + i);
-                var dayOfWeek = date.getDay();
-
-                // Check if it's a weekend (Saturday or Sunday)
-                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-                  currentPoints -= pointsPerDay;
-                }
-
-                idealData.push(currentPoints > 0 ? currentPoints : 0); // Ensure it doesn't go below 0
-              }
-
-              return idealData;
-            })(),
-            borderColor: 'gray',
-            borderDash: [5, 5],
-            fill: false
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            ticks: {
-              color: labelColor
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Points',
-              color: labelColor
-            },
-            ticks: {
-              color: labelColor
-            }
-          }
-        }
-      }
-    });
+  storyPointsSection.addEventListener('mouseenter', () => {
+    sprintIssuesChartContainer.classList.add('hidden');
+    sprintPointsChart.classList.remove('hidden');
   });
 </script>
 
