@@ -145,7 +145,7 @@
         <%= erb :_issue, locals: { issue:, sprint: } %>
       <% end %>
     <% else %>
-      Sprint has no open issues assigned to it.
+      <% if sprint.start_date.past? %><span class="print:hidden">🎉 </span><% end %>Sprint has no open issues assigned to it.
     <% end %>
   </div>
 </div>
