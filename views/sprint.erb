@@ -45,7 +45,7 @@
 
 <div class="w-full max-w-4xl mx-auto p-4 bg-white shadow rounded-lg dark:bg-black print:shadow-none">
   <div class="grid grid-cols-1 gap-6">
-    <%= erb :_points_chart, locals: { sprint: sprint } %>
+    <%= erb :_points_chart, locals: { sprint: sprint, issues: sprint.issues, closed_issues: sprint.issues.closed } %>
     <%= erb :_issues_chart, locals: { sprint: sprint } %>
   </div>
 
