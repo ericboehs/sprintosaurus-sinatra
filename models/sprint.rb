@@ -35,7 +35,7 @@ class Sprint < ActiveRecord::Base
           issue.number,
           issue.title,
           issue.status,
-          issue.closed? ? 'Closed' : 'Open',
+          issue.state.humanize,
           issue.points,
           issue.added_at(self)&.strftime('%Y-%m-%d'),
           issue.closed_at&.strftime('%Y-%m-%d'),
