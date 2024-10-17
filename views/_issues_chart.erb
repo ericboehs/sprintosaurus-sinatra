@@ -18,7 +18,7 @@
       return date <= today;
     });
 
-    var closedIssuesByDay = <%= sprint.issues.closed.group_by { |issue| issue.closed_at.to_date }.transform_values { |issues| issues.map { |i| "##{i.number} #{i.title} (#{i.points} points)" } }.to_json %>;
+    var closedIssuesByDay = <%= sprint.issues.closed.group_by { |issue| issue.closed_at.to_date }.transform_values { |issues| issues.map { |i| "##{i.number} #{i.title.gsub('"', '\\"')} (#{i.points} points)" } }.to_json %>;
     var issuePointsByDay = <%= sprint.issues.group_by { |issue| issue.closed_at&.to_date || sprint.end_date.to_date }.transform_values { |issues| issues.map(&:points).compact.sum }.to_json %>;
 
     var sprintIssuesChart = new Chart(ctxIssues, {

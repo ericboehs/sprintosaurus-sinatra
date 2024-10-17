@@ -21,7 +21,7 @@
         closedIssuesByDay[formattedDate] = [];
         issuePointsByDay[formattedDate] = 0;
       }
-      closedIssuesByDay[formattedDate].push("#<%= issue.number %> <%= issue.title %> (<%= issue.points %> points)");
+      closedIssuesByDay[formattedDate].push("#<%= issue.number %> <%= issue.title.gsub('"', '\\"') %> (<%= issue.points %> points)");
       issuePointsByDay[formattedDate] += <%= issue.points || 0 %>;
     <% end %>
 
