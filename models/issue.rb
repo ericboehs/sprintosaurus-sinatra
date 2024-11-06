@@ -28,6 +28,7 @@ class Issue < ActiveRecord::Base
     state == 'MERGED'
   end
 
+  # FIXME: This seems to be bugged. It looks like issue_sprints are getting created a midnight?
   def unplanned?(sprint)
     issue_sprint = issues_sprints.find_by(sprint:)
     issue_sprint.created_at > issue_sprint.sprint.start_date
