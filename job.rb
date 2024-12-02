@@ -52,7 +52,10 @@ class Job
           issue_sprint = IssuesSprint.with_removed.find_by(issue:, sprint:)
 
           if issue_sprint
-            issue_sprint.restore if issue_sprint.removed?
+            if sprint.iteration_id == iteration_id
+              # Clear removed_at when the issue is being re-added to the sprint
+              issue_sprint.restore if issue_sprint.removed?
+            end
           elsif sprint.iteration_id == iteration_id
             # Use issue's created_at if we're importing for the first time as when it was added is not available
             issue_sprint = IssuesSprint.with_removed.new(issue:, sprint:)
