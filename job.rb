@@ -35,9 +35,7 @@ class Job
       issues.each do |issue_data|
         next unless issue_data&.dig(:content, :number) # Skip drafts
 
-        issue = Issue.find_by(github_node_id: issue_data[:id]) # Support existing issues
-        issue ||= project.issues.find_by(number: issue_data[:content][:number])
-        issue ||= Issue.find_by(number: issue_data[:content][:number])
+        issue = Issue.find_by(github_node_id: issue_data[:id])
         issue ||= Issue.new
         issue.github_node_id = issue_data[:id]
         issue.number = issue_data[:content][:number]
