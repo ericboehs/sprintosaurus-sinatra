@@ -10,6 +10,7 @@ gem 'octokit'
 gem 'pg'
 gem 'puma'
 gem 'rackup'
+gem 'secure_headers'
 gem 'sinatra'
 gem 'sinatra-contrib'
 

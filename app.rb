@@ -2,9 +2,29 @@
 
 require_relative './environment'
 require_relative './job'
+require 'secure_headers'
+
+if ENV['RACK_ENV'] == 'production'
+  SecureHeaders::Configuration.default do |config|
+    config.csp = {
+      default_src: ["'self'"], # Allow resources from the same origin
+      script_src: ["'self'", "sprintosaurus.com"], # Specify allowed JavaScript sources
+      style_src: ["'self'", "'unsafe-inline'"], # Allow inline styles (or use nonce-based approach)
+      img_src: ["'self'", "data:"], # Allow images and base64 encoded images
+      font_src: ["'self'", "https://fonts.googleapis.com"],
+      connect_src: ["'self'", "https://sprintosaurus.com"], # Allow API requests
+      object_src: ["'none'"], # Disallow Flash/other plugins
+      frame_ancestors: ["'none'"], # Prevent clickjacking
+      base_uri: ["'self'"],
+      form_action: ["'self'"],
+      upgrade_insecure_requests: true # Upgrade HTTP to HTTPS
+    }
+  end
+end
 
 # The App
 class App < Sinatra::Base
+  use SecureHeaders::Middleware if ENV['RACK_ENV'] == 'production'
   include ActionView::Helpers::DateHelper
   helpers Sinatra::ContentFor
   helpers do
