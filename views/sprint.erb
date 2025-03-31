@@ -105,7 +105,7 @@
   </div>
 </div>
 
-<script>
+<script nonce="<%= csp_nonce %>">
   // Hover functionality for Issues and PRs chart
   const issuesPRsSection = document.getElementById('issuesPRsSection');
   const storyPointsSection = document.querySelector('.mb-4.space-y-2:not(#issuesPRsSection)');
@@ -177,7 +177,7 @@
   </div>
 </div>
 <% content_for(:scripts) do %>
-  <script>
+  <script nonce="<%= csp_nonce %>">
     // Tooltips
     document.querySelectorAll('[tooltip]').forEach(tooltip => {
       document.addEventListener('click', event => {

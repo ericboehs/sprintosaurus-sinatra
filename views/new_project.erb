@@ -39,7 +39,7 @@
   </div>
 </form>
 
-<script>
+<script nonce="<%= csp_nonce %>">
   document.querySelector('form').addEventListener('submit', function() {
     var submitButton = this.querySelector('button[data-disable-with]');
     if (submitButton) {

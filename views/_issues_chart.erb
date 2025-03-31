@@ -2,7 +2,7 @@
   <canvas id="sprintIssuesChart"></canvas>
 </div>
 
-<script>
+<script nonce="<%= csp_nonce %>">
   document.addEventListener('DOMContentLoaded', function () {
     var today = new Date().setHours(0, 0, 0, 0);
     var labels = <%= (sprint.start_date.to_date..sprint.end_date.to_date).map { |date| date.strftime("%a %-d") }.to_json %>;

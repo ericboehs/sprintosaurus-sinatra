@@ -8,7 +8,7 @@ if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
   SecureHeaders::Configuration.default do |config|
     config.csp = {
       default_src: ["'self'"], # Allow resources from the same origin
-      script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"], # Specify allowed JavaScript sources
+      script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
       style_src: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"], # Allow inline styles and TailwindCSS
       img_src: ["'self'", "data:"], # Allow images and base64 encoded images
       font_src: ["'self'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com"],
@@ -42,9 +42,21 @@ class App < Sinatra::Base
         per_page:
       }
     end
+
+    def csp_nonce
+      request.env['csp_nonce'] ||= SecureRandom.base64(16)
+    end
   end
 
   set :public_folder, File.dirname(__FILE__) + '/public'
+
+  before do
+    SecureHeaders.append_content_security_policy_directives(
+      request,
+      script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
+      script_nonce: csp_nonce
+    )
+  end
 
   get '/' do
     @projects = Project.all.order(updated_at: :desc)

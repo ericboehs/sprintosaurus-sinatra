@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com" nonce="<%= csp_nonce %>"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" nonce="<%= csp_nonce %>"></script>
   <title>
     <%= @title + ' - ' if @title %>Sprintosaurus
   </title>
@@ -110,7 +110,7 @@
        </main>
     </div>
   </div>
-  <script>
+  <script nonce="<%= csp_nonce %>">
     function toggleMenu() {
         var menu = document.getElementById('mobile-menu');
         menu.classList.toggle('hidden');
@@ -119,7 +119,7 @@
     var button = document.querySelector('button[type="button"]');
     button.addEventListener('click', toggleMenu);
   </script>
-  <script>
+  <script nonce="<%= csp_nonce %>">
     // Add a title attribute to time elements for hover text
     document.querySelectorAll('time').forEach(timeElement => {
       if (!timeElement.getAttribute('datetime') || timeElement.getAttribute('title')) return
