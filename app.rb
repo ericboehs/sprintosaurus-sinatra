@@ -4,15 +4,15 @@ require_relative './environment'
 require_relative './job'
 require 'secure_headers'
 
-if ENV['RACK_ENV'] == 'production'
+if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
   SecureHeaders::Configuration.default do |config|
     config.csp = {
       default_src: ["'self'"], # Allow resources from the same origin
-      script_src: ["'self'", "sprintosaurus.com"], # Specify allowed JavaScript sources
-      style_src: ["'self'", "'unsafe-inline'"], # Allow inline styles (or use nonce-based approach)
+      script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"], # Specify allowed JavaScript sources
+      style_src: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"], # Allow inline styles and TailwindCSS
       img_src: ["'self'", "data:"], # Allow images and base64 encoded images
-      font_src: ["'self'", "https://fonts.googleapis.com"],
-      connect_src: ["'self'", "https://sprintosaurus.com"], # Allow API requests
+      font_src: ["'self'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com"],
+      connect_src: ["'self'", "https://sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"], # Allow API requests
       object_src: ["'none'"], # Disallow Flash/other plugins
       frame_ancestors: ["'none'"], # Prevent clickjacking
       base_uri: ["'self'"],
@@ -24,7 +24,7 @@ end
 
 # The App
 class App < Sinatra::Base
-  use SecureHeaders::Middleware if ENV['RACK_ENV'] == 'production'
+  use SecureHeaders::Middleware if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
   include ActionView::Helpers::DateHelper
   helpers Sinatra::ContentFor
   helpers do
