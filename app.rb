@@ -9,8 +9,8 @@ if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
     config.csp = {
       default_src: ["'self'"], # Allow resources from the same origin
       script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
-      style_src: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"], # Allow inline styles and TailwindCSS
-      img_src: ["'self'", "data:"], # Allow images and base64 encoded images
+      style_src: ["'self'", "https://cdn.tailwindcss.com"],
+      img_src: ["'self'", "data:", "https://avatars.githubusercontent.com"],
       font_src: ["'self'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com"],
       connect_src: ["'self'", "https://sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"], # Allow API requests
       object_src: ["'none'"], # Disallow Flash/other plugins
@@ -54,7 +54,9 @@ class App < Sinatra::Base
     SecureHeaders.append_content_security_policy_directives(
       request,
       script_src: ["'self'", "sprintosaurus.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
-      script_nonce: csp_nonce
+      style_src: ["'self'", "https://cdn.tailwindcss.com"],
+      script_nonce: csp_nonce,
+      style_nonce: csp_nonce
     )
   end
 

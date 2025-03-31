@@ -1,0 +1,21 @@
+module.exports = {
+  content: [
+    {
+      files: ['./views/**/*.erb'],
+      extract: {
+        html: content => content
+      }
+    },
+    {
+      files: ['./views/*.erb'],
+      extract: {
+        html: content => content
+      }
+    },
+    './app.rb'
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}

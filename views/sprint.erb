@@ -43,6 +43,14 @@
   </div>
 <% end %>
 
+<% sprint_percent = sprint.points == 0 ? 0 : ((sprint.points_completed.to_f / sprint.points) * 100).round %>
+<% issue_percent = sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>
+
+<style nonce="<%= csp_nonce %>">
+  .points-bar-<%= sprint_percent %> { width: <%= sprint_percent %>% }
+  .issues-bar-<%= issue_percent %> { width: <%= issue_percent %>% }
+</style>
+
 <div class="w-full max-w-4xl mx-auto p-4 bg-white shadow rounded-lg dark:bg-black print:shadow-none">
   <div class="grid grid-cols-1 gap-6">
     <%= erb :_points_chart, locals: { sprint: sprint, issues: sprint.issues, closed_issues: sprint.issues.closed } %>
@@ -55,9 +63,9 @@
       <h3 class="font-semibold mb-2 dark:text-gray-200">Story Points</h3>
       <div class="flex items-center">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
-          <div class="bg-lime-600 h-2.5 rounded-full" style="width: <%= sprint.points == 0 ? 0 : ((sprint.points_completed.to_f / sprint.points) * 100).round %>%;"></div>
+          <div class="bg-lime-600 h-2.5 rounded-full points-bar-<%= sprint_percent %>"></div>
         </div>
-        <span class="ml-2 text-gray-700 font-semibold"><%= sprint.points == 0 ? 0 : ((sprint.points_completed.to_f / sprint.points) * 100).round %>%</span>
+        <span class="ml-2 text-gray-700 font-semibold"><%= sprint_percent %>%</span>
       </div>
       <div class="flex justify-between text-gray-600 mt-2 dark:text-gray-200">
         <div>
@@ -83,9 +91,9 @@
       </h3>
       <div class="flex items-center cursor-pointer">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-900">
-          <div class="bg-purple-600 h-2.5 rounded-full" style="width: <%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%;"></div>
+          <div class="bg-purple-600 h-2.5 rounded-full issues-bar-<%= issue_percent %>"></div>
         </div>
-        <span class="ml-2 text-gray-700 font-semibold"><%= sprint.issues.count == 0 ? 0 : ((sprint.issues.closed.count.to_f / sprint.issues.count) * 100).round %>%</span>
+        <span class="ml-2 text-gray-700 font-semibold"><%= issue_percent %>%</span>
       </div>
       <div class="flex justify-between text-gray-600 mt-2 dark:text-gray-200">
         <div>
