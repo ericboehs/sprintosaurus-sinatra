@@ -11,6 +11,31 @@
   </title>
 </head>
 <body class="h-full bg-gray-50 justify-center min-h-screen dark:bg-gray-950 dark:text-gray-100 print:bg-white">
+  <% if ENV['SHOW_SUNSET_BANNER'] == 'true' %>
+  <!-- Sunsetting Banner -->
+  <div class="relative isolate flex items-center justify-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 dark:bg-gray-800/50 print:hidden">
+    <div aria-hidden="true" class="absolute top-1/2 left-[max(-7rem,calc(50%-52rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)" class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"></div>
+    </div>
+    <div aria-hidden="true" class="absolute top-1/2 left-[max(45rem,calc(50%+8rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)" class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"></div>
+    </div>
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+      <div class="text-sm/6 text-gray-900 dark:text-gray-100 text-center">
+        <span class="font-semibold"><img src="/sunset.png" alt="Sunset" class="inline w-10 h-10 mr-2 rounded-lg"> Sprintosaurus is sunsetting on Sept 30th</span>
+        <br class="sm:hidden">
+        <svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 hidden sm:inline size-0.5 fill-current">
+          <circle r="1" cx="1" cy="1" />
+        </svg>
+        <span>Still need Sprintosaurus?</span>
+      </div>
+      <a href="https://github.com/ericboehs/sprintosaurus-sinatra" target="_blank" rel="noopener noreferrer" class="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:bg-white/10 dark:hover:bg-white/15 dark:focus-visible:outline-white">
+        Host it Yourself <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+  <% end %>
+
   <div class="min-h-full">
     <nav class="border-b border-gray-200 bg-white dark:bg-black dark:border-gray-700 print:hidden">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

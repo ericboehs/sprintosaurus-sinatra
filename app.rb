@@ -16,8 +16,7 @@ if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
       object_src: ["'none'"], # Disallow Flash/other plugins
       frame_ancestors: ["'none'"], # Prevent clickjacking
       base_uri: ["'self'"],
-      form_action: ["'self'"],
-      upgrade_insecure_requests: true # Upgrade HTTP to HTTPS
+      form_action: ["'self'"]
     }
   end
 end
@@ -51,13 +50,15 @@ class App < Sinatra::Base
   set :public_folder, File.dirname(__FILE__) + '/public'
 
   before do
-    SecureHeaders.append_content_security_policy_directives(
-      request,
-      script_src: ["'self'", "sprintosaurus.com"],
-      style_src: ["'self'"],
-      script_nonce: csp_nonce,
-      style_nonce: csp_nonce
-    )
+    if ENV['RACK_ENV'] == 'production' || ENV['ENABLE_CSP'] == 'true'
+      SecureHeaders.append_content_security_policy_directives(
+        request,
+        script_src: ["'self'", "sprintosaurus.com"],
+        style_src: ["'self'"],
+        script_nonce: csp_nonce,
+        style_nonce: csp_nonce
+      )
+    end
   end
 
   get '/' do
