@@ -1,6 +1,7 @@
 # Sprintosaurus
 
-🌅 **Sprintosaurus is sunsetting on Sept 30th, 2025.** This README will help you self-host it if you still need it.
+> [!IMPORTANT]  
+> Sprintosaurus is sunsetting on Sept 30th, 2025. This README will help you self-host it if you still need it.
 
 Sprintosaurus is a Ruby/Sinatra web application that generates comprehensive sprint reports for GitHub Projects. It integrates with the GitHub API to fetch project data, track issues across sprints with point estimates, and provides reporting capabilities including CSV exports and visual charts.
 
