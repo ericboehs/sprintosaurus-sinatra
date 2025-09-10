@@ -1,5 +1,7 @@
 # Sprintosaurus
 
+<img src="public/sunset.png" alt="Sunset" width="80" align="right">
+
 > [!IMPORTANT]  
 > Sprintosaurus is sunsetting on Sept 30th, 2025. This README will help you self-host it if you still need it.
 
